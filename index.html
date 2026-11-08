@@ -22,12 +22,11 @@
   body { margin: 0; background: var(--bg); color: var(--fg);
     font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
   header { max-width: 1340px; margin: 0 auto; padding: 24px 16px 4px; }
-  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px 24px; flex-wrap: wrap; margin-bottom: 6px; }
-  h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
-  .byline { font-size: 12.5px; color: var(--muted); }
-  .byline a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--grid); text-underline-offset: 3px; }
-  .byline a:hover { color: var(--fg); }
-  .sub { color: var(--muted); margin: 0 0 12px; max-width: 760px; }
+  .bar { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted); padding-bottom: 10px; border-bottom: 1px solid var(--grid); margin-bottom: 22px; }
+  .bar a { color: var(--muted); text-decoration: none; }
+  .bar a:hover { color: var(--fg); }
+  h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 0 0 18px; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
   .legend i { width: 18px; height: 4px; border-radius: 2px; display: inline-block; }
@@ -60,18 +59,14 @@
   #tip .m { opacity: .7; font-size: 12px; }
   #tip ul { margin: 6px 0 0; padding-left: 16px; }
   #tip li { margin: 2px 0; }
-  .note { margin: 0 0 14px; color: var(--muted); font-size: 12px; font-style: italic; }
   footer { max-width: 1340px; margin: 0 auto; padding: 0 16px 30px; color: var(--muted); font-size: 12px; }
 </style>
 </head>
 <body>
 <header>
-  <div class="top">
-    <h1>Pashas, plots and gallows, 1865–1964</h1>
-    <div class="byline">Made by Cahid Arda Öz · <a href="https://cahidarda.com/articles/rical-1876">Blog post</a> · <a href="https://github.com/CahidArda/rical-1876">GitHub</a> · <a href="https://x.com/cahidarda">X</a></div>
-  </div>
-  <p class="sub">Each vertical line is a person and time flows down. Lines meet in an event box, each inside the party they were on, and end where the person dies. Hover or tap a line, a box or a ✕ for details.</p>
-  <p class="note">Prepared with AI: names, dates and descriptions were written by Claude and may contain mistakes.</p>
+  <nav class="bar"><span>Made by Cahid Arda Öz</span><span><a href="https://cahidarda.com/articles/rical-1876">Blog post</a> · <a href="https://github.com/CahidArda/rical-1876">GitHub</a> · <a href="https://x.com/cahidarda">X</a></span></nav>
+  <h1>Pashas, plots and gallows, 1865–1964</h1>
+  <p class="sub">Each line is a person, time flows down, and lines meet in a box when people share an event. Tap or hover a line, a box or a ✕ for details.<br>Prepared with AI (Claude); names, dates and descriptions may contain mistakes.</p>
   <div class="legend" id="legend"></div>
 </header>
 <div class="wrap"><svg id="chart" xmlns="http://www.w3.org/2000/svg"></svg></div>
