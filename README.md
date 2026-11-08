@@ -1,5 +1,8 @@
 # Rical 1876
 
+> Made by Cahid Arda Öz with Claude. The app was prepared with AI, so details may be wrong.
+> The historical content was written by the agent; it isn't my claim or opinion.
+
 **Pashas, plots and gallows.** An interactive storyline of the late Ottoman statesmen
 (*ricâl-i devlet*), 1865–1964: who stood with whom, who turned on whom, and who outlived whom.
 
@@ -52,4 +55,3 @@ Deployed on Vercel as a static site straight from `main`.
 
 Made by Cahid Arda Öz with Claude · [Blog post](https://cahidarda.com/articles/rical-1876) · [GitHub](https://github.com/CahidArda) · [@cahidarda](https://x.com/cahidarda)
 
-Prepared with AI. The names, dates and descriptions were written by Claude and may contain mistakes.
