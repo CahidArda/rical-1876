@@ -50,4 +50,6 @@ Deployed on Vercel as a static site straight from `main`.
 
 ---
 
-Made by Cahid Arda Öz · [GitHub](https://github.com/CahidArda) · [@cahidarda](https://x.com/cahidarda)
+Made by Cahid Arda Öz with Claude · [Blog post](https://cahidarda.com/articles/rical-1876) · [GitHub](https://github.com/CahidArda) · [@cahidarda](https://x.com/cahidarda)
+
+Prepared with AI. The names, dates and descriptions were written by Claude and may contain mistakes.
