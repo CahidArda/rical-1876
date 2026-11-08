@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rical 1876 — Pashas, plots and gallows</title>
+<meta name="description" content="An interactive storyline of late Ottoman statesmen, 1865–1964: who stood with whom, who turned on whom, who outlived whom.">
+<style>
+  :root {
+    --bg: #faf8f4; --fg: #1c1917; --muted: #78716c; --grid: #e7e5e4;
+    --box: #ffffff; --box-stroke: #a8a29e; --party: #f5f5f4; --party-stroke: #d6d3d1;
+    --tip-bg: #1c1917; --tip-fg: #fafaf9; --gap: #f0ece4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161412; --fg: #f5f5f4; --muted: #a8a29e; --grid: #2e2a27;
+      --box: #211e1b; --box-stroke: #57534e; --party: #2a2623; --party-stroke: #44403c;
+      --tip-bg: #f5f5f4; --tip-fg: #1c1917; --gap: #1f1c19;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { max-width: 1340px; margin: 0 auto; padding: 24px 20px 4px; }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 0 0 12px; max-width: 760px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 18px; height: 4px; border-radius: 2px; display: inline-block; }
+  .wrap { overflow-x: auto; padding: 0 0 40px; }
+  svg { display: block; margin: 0 auto; }
+  .guide { stroke-dasharray: 1 5; stroke-width: 1; opacity: .35; }
+  .rowline { stroke: var(--grid); stroke-width: 1; }
+  .date { font-size: 12px; font-weight: 650; fill: var(--fg); }
+  .etitle { font-size: 11.5px; fill: var(--muted); }
+  .dlabel { font-size: 11px; fill: var(--muted); font-style: italic; }
+  .slabel { font-size: 10.5px; font-weight: 600; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+  .life { fill: none; stroke-width: 2.6; stroke-linecap: round; transition: opacity .15s; }
+  .hit { fill: none; stroke: transparent; stroke-width: 12; cursor: pointer; pointer-events: stroke; }
+  .ebox { fill: var(--box); stroke: var(--box-stroke); stroke-width: 1.2; cursor: pointer; }
+  .pbox { fill: var(--party); stroke: var(--party-stroke); stroke-width: 1; }
+  .plabel { font-size: 9.5px; font-weight: 600; fill: var(--muted); pointer-events: none; text-transform: uppercase; letter-spacing: .03em; }
+  .seg { stroke-width: 3; stroke-linecap: round; pointer-events: none; }
+  .dot { pointer-events: none; }
+  .death { cursor: pointer; }
+  .death text { font-size: 15px; font-weight: 700; pointer-events: none; }
+  .gapband { fill: var(--gap); }
+  .gaptext { font-size: 12px; fill: var(--muted); font-style: italic; }
+  svg.focus .person { opacity: .12; }
+  svg.focus .person.on { opacity: 1; }
+  svg.focus .person.on .life { stroke-width: 3.6; }
+  #tip { position: fixed; z-index: 10; pointer-events: none; max-width: 340px;
+    background: var(--tip-bg); color: var(--tip-fg); border-radius: 8px; padding: 10px 12px;
+    font-size: 13px; line-height: 1.45; box-shadow: 0 6px 24px rgba(0,0,0,.25); display: none; }
+  #tip b { font-size: 14px; }
+  #tip .m { opacity: .7; font-size: 12px; }
+  #tip ul { margin: 6px 0 0; padding-left: 16px; }
+  #tip li { margin: 2px 0; }
+  .byline { position: absolute; top: 24px; right: 20px; text-align: right; font-size: 13px; line-height: 1.5; }
+  .byline b { display: block; font-size: 14px; }
+  .byline a { color: var(--muted); text-decoration: none; }
+  .byline a:hover { color: var(--fg); text-decoration: underline; }
+  header { position: relative; }
+  @media (max-width: 700px) { .byline { position: static; text-align: left; margin-bottom: 10px; } }
+  footer { max-width: 1340px; margin: 0 auto; padding: 0 20px 30px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="byline"><b>Made by Cahid Arda Öz</b><a href="https://github.com/CahidArda">github.com/CahidArda</a><br><a href="https://x.com/cahidarda">@cahidarda</a></div>
+  <h1>Pashas, plots and gallows, 1865–1964</h1>
+  <p class="sub">Each vertical line is a person and time flows down. Lines merge into an event box when the person takes part, sitting inside the party they were on. A line ends where the person dies. Hover or tap a line, a box or a ✕ for details.</p>
+  <div class="legend" id="legend"></div>
+</header>
+<div class="wrap"><svg id="chart" xmlns="http://www.w3.org/2000/svg"></svg></div>
+<footer>Simplified for readability. Rows are spaced evenly, not to scale; dashed bands mark long jumps in time. Some dates are approximate.</footer>
+<div id="tip"></div>
+
+<script>
+const GROUPS = {
+  yo:      "Young Ottomans",
+  palace:  "Palace",
+  m1876:   "Tanzimat statesmen",
+  react:   "Religious reaction",
+  opp:     "Liberal opposition / İtilâf",
+  army:    "Army command",
+  cup:     "Unionists (CUP)",
+  nat:     "Unionists → National movement",
+};
+const GROUP_COLOR = { yo:"#ca8a04", palace:"#8b5cf6", m1876:"#78716c", react:"#16a34a", opp:"#2563eb", army:"#b45309", cup:"#dc2626", nat:"#0d9488" };
+
+const P = [
+  { id:"suavi", name:"Ali Suavi", g:"yo", c:"#eab308", bio:"Radical Young Ottoman journalist and preacher. Edited Muhbir in exile and came back under Abdülhamid.",
+    death:"Killed in the Çırağan raid on 20 May 1878, clubbed down by the Beşiktaş police chief Hasan Paşa ('Sopalı Hasan')." },
+  { id:"nkemal", name:"Namık Kemal", g:"yo", c:"#ca8a04", bio:"Poet of 'vatan' and 'hürriyet'. Young Ottoman, member of the constitution commission, and Midhat's ally.",
+    death:"Died on Chios (Sakız) on 2 Dec 1888. He was governor there, which was effectively still exile." },
+  { id:"nedim", name:"Mahmud Nedim Paşa", g:"m1876", c:"#57534e", bio:"Grand Vizier 1871–72 and 1875–76.",
+    death:"Died in Istanbul in 1883." },
+  { id:"hasan", name:"Çerkes Hasan", g:"palace", c:"#c084fc", bio:"Circassian officer and Abdülaziz's brother-in-law. Ordered off to Baghdad after the 1876 coup.",
+    death:"Hanged at Beyazıt on 17 Jun 1876, two days after the raid." },
+  { id:"avni", name:"Hüseyin Avni Paşa", g:"m1876", c:"#64748b", bio:"Serasker (war minister); the driving force behind Abdülaziz's deposition.",
+    death:"Shot and stabbed by Çerkes Hasan at Midhat's konak, 15 Jun 1876." },
+  { id:"midhat", name:"Midhat Paşa", g:"m1876", c:"#a8a29e", bio:"Reforming statesman, author of the 1876 constitution, briefly Grand Vizier.",
+    death:"Died in confinement at Taif (Hejaz) in 1884." },
+  { id:"murad", name:"Murad V", g:"palace", c:"#d8b4fe", bio:"Abdülaziz's nephew and the Young Ottomans' great hope. Sultan for 93 days in 1876.",
+    death:"Died in Çırağan Palace on 29 Aug 1904, after 28 years of confinement." },
+  { id:"ah", name:"Abdülhamid II", g:"palace", c:"#7c3aed", bio:"Sultan 1876–1909. Suspended the constitution in 1878 and ruled from Yıldız for 30 years.",
+    death:"Died at Beylerbeyi Palace on 10 Feb 1918." },
+  { id:"m5", name:"Mehmed V Reşad", g:"palace", c:"#a78bfa", bio:"Abdülhamid's brother; sultan 1909–1918, a figurehead under the CUP.",
+    death:"Died 3 Jul 1918, months before the Ottoman defeat." },
+  { id:"vahdeti", name:"Derviş Vahdeti", g:"react", c:"#16a34a", bio:"Naqshbandi dervish and editor of Volkan; agitated for 'sharia' against the CUP.",
+    death:"Hanged in Istanbul in 1909 after the court-martial that followed 31 Mart." },
+  { id:"sabahaddin", name:"Prens Sabahaddin", g:"opp", c:"#2563eb", bio:"Ottoman prince and liberal theorist of decentralization (adem-i merkeziyet). Patron of Ahrar and the İtilâf current.",
+    death:"Died in exile in Neuchâtel, Switzerland, on 30 Jun 1948." },
+  { id:"riza", name:"Ahmed Rıza", g:"cup", c:"#f43f5e", bio:"Positivist who led the CUP in Paris exile (Meşveret). Speaker of the 1908 parliament. Later drifted away from the Unionists.",
+    death:"Died in Istanbul on 26 Feb 1930." },
+  { id:"sadik", name:"Miralay Sadık Bey", g:"opp", c:"#0ea5e9", bio:"Founding Unionist officer from Manastır who broke with the CUP leadership and co-led Hürriyet ve İtilâf.",
+    death:"Died in exile in 1940." },
+  { id:"kamil", name:"Kâmil Paşa", g:"opp", c:"#60a5fa", bio:"Veteran, pro-British Grand Vizier and the CUP's favourite enemy.",
+    death:"Died in exile in Nicosia, Cyprus, on 14 Nov 1913." },
+  { id:"nazimp", name:"Nazım Paşa", g:"opp", c:"#0891b2", bio:"General close to the anti-CUP officers; War Minister and commander-in-chief 1912–13.",
+    death:"Shot dead in the Bab-ı Ali raid, 23 Jan 1913 (most accounts name Yakub Cemil)." },
+  { id:"msevket", name:"Mahmud Şevket Paşa", g:"army", c:"#b45309", bio:"Commander of the Action Army. Worked with the CUP but would not take its orders; Grand Vizier 1913.",
+    death:"Shot in his car at Beyazıt, 11 Jun 1913. The opposition was blamed and a dozen men were hanged." },
+  { id:"sait", name:"Sait Halim Paşa", g:"cup", c:"#c2410c", bio:"Egyptian prince and Islamist thinker; Grand Vizier 1913–17. Signed the secret alliance with Germany.",
+    death:"Assassinated in Rome by an Armenian militant, 5 Dec 1921." },
+  { id:"talat", name:"Talât", g:"cup", c:"#dc2626", bio:"Former postal clerk who became the CUP's political leader; Interior Minister, then Grand Vizier 1917–18.",
+    death:"Assassinated in Berlin by an Armenian militant, 15 Mar 1921." },
+  { id:"enver", name:"Enver", g:"cup", c:"#e11d48", bio:"'Hero of freedom' of 1908, led the 1913 raid, War Minister 1914–18.",
+    death:"Killed charging Red Army troops near Baljuan, Tajikistan, 4 Aug 1922, while leading Basmachi rebels." },
+  { id:"yakub", name:"Yakub Cemil", g:"cup", c:"#7f1d1d", bio:"Unionist officer and fedai.",
+    death:"Executed by firing squad in Sep 1916 after being accused of plotting a coup against Enver." },
+  { id:"niyazi", name:"Resneli Niyazi", g:"cup", c:"#fb923c", bio:"Albanian officer from Resen who started the 1908 revolution by taking to the mountains.",
+    death:"Shot in Vlorë (Avlonya), Albania, on 17 Apr 1913 while waiting to sail home." },
+  { id:"cemal", name:"Cemal", g:"cup", c:"#991b1b", bio:"Third of the triumvirs: Istanbul military governor, Navy Minister, then wartime ruler of Syria.",
+    death:"Assassinated in Tiflis by Armenian militants, 21 Jul 1922." },
+  { id:"drnazim", name:"Dr. Nâzım", g:"cup", c:"#be185d", bio:"CUP central-committee member and ideologue.",
+    death:"Hanged in Ankara on 26 Aug 1926 after the İzmir plot trial." },
+  { id:"sakir", name:"Bahaeddin Şakir", g:"cup", c:"#9d174d", bio:"CUP central-committee member and physician.",
+    death:"Assassinated in Berlin by Armenian militants, 17 Apr 1922." },
+  { id:"cavid", name:"Cavid", g:"cup", c:"#f87171", bio:"Economist from Salonika and the CUP's Finance Minister. Opposed entering the war.",
+    death:"Hanged in Ankara on 26 Aug 1926 after the İzmir plot trial." },
+  { id:"vahdettin", name:"Mehmed VI Vahdettin", g:"palace", c:"#6d28d9", bio:"Last Ottoman sultan, 1918–1922.",
+    death:"Died in exile in Sanremo, Italy, on 16 May 1926." },
+  { id:"ferid", name:"Damat Ferid Paşa", g:"opp", c:"#1e40af", bio:"Sultan's son-in-law and leader of the revived İtilâf; Grand Vizier several times in 1919–20.",
+    death:"Died in exile in Nice on 6 Oct 1923." },
+  { id:"kemal", name:"Mustafa Kemal", g:"nat", c:"#0d9488", bio:"Action Army staff officer, Libya volunteer, Gallipoli commander, then leader of the national movement and president.",
+    death:"Died at Dolmabahçe Palace on 10 Nov 1938." },
+  { id:"fethi", name:"Fethi Okyar", g:"nat", c:"#5eead4", bio:"Kemal's friend from Libya and Sofia; Prime Minister 1924–25; led the short-lived 'loyal opposition' party in 1930.",
+    death:"Died in Istanbul on 7 May 1943." },
+  { id:"rauf", name:"Rauf Orbay", g:"nat", c:"#0f766e", bio:"Naval hero of the Balkan War who signed the Mudros armistice. Co-founded the national movement, then the opposition against Kemal.",
+    death:"Died in Istanbul on 16 Jul 1964, outliving almost everyone here." },
+  { id:"karabekir", name:"Kâzım Karabekir", g:"nat", c:"#2dd4bf", bio:"Unionist officer and commander in the East in 1919; later led the first opposition party against Kemal.",
+    death:"Died in Ankara on 26 Jan 1948 while Speaker of Parliament." },
+];
+
+const ROWS = [
+  { t:"e", date:"1865–1867", title:"Young Ottomans",
+    desc:"A secret 'Patriotic Alliance' of young bureaucrats and writers demands a constitution. In 1867 its leaders flee to Paris and London, where they publish Muhbir and Hürriyet.",
+    parties:[{ name:"Young Ottomans", m:["nkemal","suavi"] }] },
+  { t:"e", date:"Apr 1873", title:"Vatan yahut Silistre",
+    desc:"Namık Kemal's patriotic play causes demonstrations in Istanbul, and he is exiled to Famagusta, Cyprus, for three years.",
+    parties:[{ name:"Exiled to Cyprus", m:["nkemal"] }] },
+  { t:"e", date:"Oct 1875", title:"Ramazan Kararnamesi",
+    desc:"With the treasury empty, Mahmud Nedim's government halves payments on the foreign debt. A commission that included Midhat had studied it beforehand. Bond prices collapse, and by spring 1876 payments stop altogether.",
+    parties:[{ name:"Grand Vizier", m:["nedim"] },{ name:"Debt commission", m:["midhat"] }] },
+  { t:"e", date:"May 1876", title:"Softa protests",
+    desc:"Thousands of medrese students (softas) rally against Mahmud Nedim, with Midhat and Hüseyin Avni behind them. The sultan dismisses 'Nedimoff'.",
+    parties:[{ name:"Behind the protests", m:["avni","midhat"] },{ name:"Dismissed", m:["nedim"] }] },
+  { t:"e", date:"30 May 1876", title:"Abdülaziz deposed",
+    desc:"Hüseyin Avni, Midhat and their allies depose Sultan Abdülaziz and enthrone Murad V. Days later Abdülaziz is found dead; his death was officially recorded as suicide.",
+    parties:[{ name:"Coup ministers", m:["avni","midhat"] },{ name:"Enthroned", m:["murad"] }] },
+  { t:"e", date:"15 Jun 1876", title:"Çerkes Hasan raid",
+    desc:"Ordered off to Baghdad, Çerkes Hasan bursts into a cabinet meeting at Midhat's konak with a revolver and a dagger. Hüseyin Avni, Foreign Minister Raşid Paşa and three others are killed.",
+    parties:[{ name:"Attacker", m:["hasan"] },{ name:"Cabinet at Midhat's", m:["avni","midhat"] }], dies:["avni"] },
+  { t:"d", who:"hasan", date:"17 Jun 1876" },
+  { t:"e", date:"31 Aug 1876", title:"Murad V deposed",
+    desc:"Murad has a breakdown after three months on the throne. Midhat swaps him for his brother Abdülhamid, who has privately promised to accept a constitution.",
+    parties:[{ name:"Deposed", m:["murad"] },{ name:"Kingmaker", m:["midhat"] },{ name:"Enthroned", m:["ah"] }] },
+  { t:"e", date:"23 Dec 1876", title:"Constitution proclaimed",
+    desc:"Abdülhamid accepts the constitution drafted by Midhat's commission, Namık Kemal among its members, and makes Midhat Grand Vizier.",
+    parties:[{ name:"Sultan", m:["ah"] },{ name:"Drafters", m:["midhat","nkemal"] }] },
+  { t:"e", date:"Feb 1877", title:"Midhat exiled",
+    desc:"Abdülhamid uses the constitution's own Article 113 to banish Midhat. Namık Kemal is arrested and sent to Midilli. In 1878 parliament is suspended for 30 years.",
+    parties:[{ name:"Sultan", m:["ah"] },{ name:"Exiled", m:["midhat","nkemal"] }] },
+  { t:"e", date:"20 May 1878", title:"Çırağan raid",
+    desc:"Ali Suavi leads a few hundred Balkan refugees in storming Çırağan Palace to free Murad V and put him back on the throne. He is beaten to death at the gate, and Murad stays a prisoner.",
+    parties:[{ name:"Raiders", m:["suavi"] },{ name:"To be restored", m:["murad"] },{ name:"Sultan", m:["ah"] }], dies:["suavi"] },
+  { t:"e", date:"Jun 1881", title:"Yıldız trial",
+    desc:"Midhat is tried at Yıldız for the 'murder' of Abdülaziz and convicted. His death sentence is commuted to imprisonment at Taif.",
+    parties:[{ name:"Palace", m:["ah"] },{ name:"Convicted", m:["midhat"] }] },
+  { t:"d", who:"nedim", date:"1883" },
+  { t:"d", who:"midhat", date:"1884" },
+  { t:"d", who:"nkemal", date:"2 Dec 1888" },
+  { t:"g", label:"1888 → 1902 · Hamidian rule; the opposition moves to Paris" },
+  { t:"e", date:"Feb 1902", title:"Paris opposition congress",
+    desc:"The first congress of the Ottoman opposition splits. Sabahaddin's majority wants decentralization and accepts foreign help. Ahmed Rıza's minority wants a centralized state and no foreign intervention. That is the CUP-vs-liberal divide, a decade early.",
+    parties:[{ name:"Decentralists", m:["sabahaddin"] },{ name:"Centralists", m:["riza"] }] },
+  { t:"d", who:"murad", date:"29 Aug 1904" },
+  { t:"e", date:"Sep–Dec 1907", title:"Salonika meets Paris",
+    desc:"Talât's Ottoman Freedom Society in Salonika merges with Ahmed Rıza's CUP in Paris and takes the CUP name. In December the second opposition congress, Sabahaddin included, agrees on revolution.",
+    parties:[{ name:"Salonika", m:["talat"] },{ name:"Paris CUP", m:["riza"] },{ name:"Decentralists", m:["sabahaddin"] }] },
+  { t:"e", date:"Jun–Jul 1908", title:"To the mountains",
+    desc:"Facing an investigation, Enver heads for Tikveş instead of reporting to Istanbul. On 3 July Niyazi raids the Resen arsenal and takes his band into the hills.",
+    parties:[{ name:"Rebel officers", m:["enver","niyazi"] },{ name:"Palace", m:["ah"] }] },
+  { t:"e", date:"23 Jul 1908", title:"Constitution restored",
+    desc:"The Third Army in Macedonia threatens to march, and Abdülhamid gives in and restores the 1876 constitution. Enver and Niyazi become 'heroes of freedom'.",
+    parties:[{ name:"CUP", m:["talat","enver","niyazi"] },{ name:"Sultan yields", m:["ah"] }] },
+  { t:"e", date:"Dec 1908", title:"Parliament reopens",
+    desc:"The first parliament in 30 years meets. Ahmed Rıza, back from Paris after 19 years, is elected its speaker.",
+    parties:[{ name:"Speaker", m:["riza"] },{ name:"Sultan", m:["ah"] }] },
+  { t:"e", date:"13 Feb 1909", title:"Kâmil Paşa toppled",
+    desc:"The CUP majority brings down Grand Vizier Kâmil in a vote of no confidence. Sabahaddin's Ahrar party had backed him.",
+    parties:[{ name:"CUP majority", m:["talat"] },{ name:"Kâmil & Ahrar", m:["kamil","sabahaddin"] }] },
+  { t:"e", date:"13 Apr 1909", title:"31 Mart uprising",
+    desc:"Troops and medrese students mutiny in Istanbul, demanding 'sharia' and the expulsion of the Unionists. Unionist leaders flee. The mob kills Justice Minister Nazım Paşa, mistaking him for Ahmed Rıza (and not the Nazım Paşa here, who is a different man).",
+    parties:[{ name:"Mutineers / Volkan", m:["vahdeti"] },{ name:"Targets, in hiding", m:["riza","talat"] }] },
+  { t:"e", date:"24 Apr 1909", title:"Action Army takes Istanbul",
+    desc:"The Hareket Ordusu marches from Salonika and retakes the capital after street fighting. Kemal is a staff officer, Niyazi brings volunteers and Enver hurries back from Berlin.",
+    parties:[{ name:"Action Army", m:["msevket","enver","niyazi","kemal"] },{ name:"Mutineers", m:["vahdeti"] }] },
+  { t:"e", date:"27 Apr 1909", title:"Abdülhamid deposed",
+    desc:"Parliament, sitting as a national assembly and armed with a fatwa, deposes Abdülhamid. He is sent to Villa Alatini in Salonika and Mehmed V is enthroned.",
+    parties:[{ name:"Deposed", m:["ah"] },{ name:"Enthroned", m:["m5"] },{ name:"Army & assembly", m:["riza","msevket","talat"] }] },
+  { t:"d", who:"vahdeti", date:"1909" },
+  { t:"e", date:"Sep 1909", title:"Salonika congress",
+    desc:"At the CUP congress Mustafa Kemal argues that officers must leave either the army or the committee. He loses the argument and isn't forgiven for it.",
+    parties:[{ name:"Army out of politics", m:["kemal"] },{ name:"Committee", m:["talat","drnazim","sakir","cavid"] }] },
+  { t:"e", date:"Apr 1911", title:"Hizb-i Cedid split",
+    desc:"Miralay Sadık leads a revolt inside the CUP against its leadership's secrecy, cronyism and alleged irreligion. Cavid soon leaves the Finance Ministry.",
+    parties:[{ name:"Dissidents", m:["sadik"] },{ name:"Leadership", m:["talat","cavid"] }] },
+  { t:"e", date:"Oct 1911", title:"Off to Libya",
+    desc:"Italy invades Tripolitania. Enver, Kemal and Fethi slip through Egypt to organize Arab resistance at Derne and Tobruk, and the Enver–Kemal rivalry starts there.",
+    parties:[{ name:"Volunteer officers", m:["enver","kemal","fethi"] }] },
+  { t:"e", date:"Nov 1911", title:"Hürriyet ve İtilâf founded",
+    desc:"A broad anti-CUP party of liberals, conservatives, non-Muslims, Albanians and dissident Unionists. Weeks later it wins an Istanbul by-election.",
+    parties:[{ name:"İtilâf camp", m:["sabahaddin","sadik","kamil"] }] },
+  { t:"e", date:"Apr 1912", title:"Election of Clubs",
+    desc:"The 'Sopalı Seçimler', held amid heavy pressure on the opposition. The CUP wins nearly every seat.",
+    parties:[{ name:"CUP", m:["talat"] },{ name:"İtilâf", m:["sabahaddin","sadik"] }] },
+  { t:"e", date:"Jul 1912", title:"Saviour Officers",
+    desc:"Halaskâr Zâbitân officers, some of them in the mountains around Manastır copying 1908, issue ultimatums. Mahmud Şevket resigns and the CUP government falls. Ahmed Muhtar's 'Great Cabinet' brings in Nazım and Kâmil.",
+    parties:[{ name:"Halaskâr side", m:["sadik","kamil","nazimp"] },{ name:"Forced out", m:["msevket","talat"] }] },
+  { t:"e", date:"Oct–Nov 1912", title:"First Balkan War",
+    desc:"The army collapses within weeks. Salonika falls to Greece, Abdülhamid is shipped out just before, and Manastır and Resen go to Serbia. Enver and Kemal rush back from Libya.",
+    parties:[{ name:"Government & command", m:["kamil","nazimp"] },{ name:"Back from Libya", m:["enver","kemal"] },{ name:"Evacuated", m:["ah"] }] },
+  { t:"e", date:"23 Jan 1913", title:"Bab-ı Ali raid",
+    desc:"Fearing that Edirne will be surrendered, Enver and Talât storm the Sublime Porte with a band of fedais. Nazım Paşa is shot, most say by Yakub Cemil. Kâmil resigns at gunpoint, and Mahmud Şevket becomes Grand Vizier.",
+    parties:[{ name:"Raiders", m:["talat","enver","yakub"] },{ name:"Government", m:["kamil","nazimp"] },{ name:"New Grand Vizier", m:["msevket"] }], dies:["nazimp"] },
+  { t:"d", who:"niyazi", date:"17 Apr 1913" },
+  { t:"e", date:"11 Jun 1913", title:"Mahmud Şevket assassinated",
+    desc:"The Grand Vizier is shot in Beyazıt. The CUP blames the opposition, hangs a dozen men, sentences Sabahaddin to death in absentia and exiles the rest. Sait Halim becomes Grand Vizier, and one-party rule follows.",
+    parties:[{ name:"Victim", m:["msevket"] },{ name:"Blamed", m:["sabahaddin","sadik"] },{ name:"Crackdown", m:["sait","talat","cemal"] }], dies:["msevket"] },
+  { t:"e", date:"Jul 1913", title:"Edirne retaken",
+    desc:"With the Balkan allies fighting each other, Enver rides into Edirne. It makes him the empire's most famous soldier.",
+    parties:[{ name:"CUP", m:["talat","enver"] }] },
+  { t:"e", date:"Oct 1913", title:"Sent to Sofia",
+    desc:"Fethi is made ambassador to Bulgaria and his friend Kemal military attaché. It is a polite way of getting both rivals of the triumvirs out of Istanbul. Same trick, different century: compare Çerkes Hasan's Baghdad posting.",
+    parties:[{ name:"Posted to Sofia", m:["kemal","fethi"] }] },
+  { t:"d", who:"kamil", date:"14 Nov 1913" },
+  { t:"e", date:"Jan 1914", title:"The triumvirate",
+    desc:"Enver becomes War Minister and, soon after, Cemal Navy Minister. With Talât at the Interior Ministry, the 'Three Pashas' run the empire.",
+    parties:[{ name:"Three Pashas", m:["talat","enver","cemal"] }] },
+  { t:"e", date:"2 Aug 1914", title:"Secret German alliance",
+    desc:"The Grand Vizier, Enver and Talât sign a secret alliance with Germany. Most of the cabinet, including Cemal and Cavid, is not told.",
+    parties:[{ name:"Signed", m:["sait","talat","enver"] },{ name:"Kept in the dark", m:["cemal","cavid"] }] },
+  { t:"e", date:"Nov 1914", title:"Into the World War",
+    desc:"The Ottoman Empire enters the war on Germany's side after Enver's Black Sea raid. Cavid resigns in protest, and Sait Halim threatens to but stays.",
+    parties:[{ name:"War party", m:["talat","enver","cemal"] },{ name:"Resigned", m:["cavid"] }] },
+  { t:"e", date:"May 1915", title:"Tehcir",
+    desc:"The Tehcir law orders the deportation of the Armenian population of Anatolia, and the Interior Ministry under Talât carries it out. In the Senate, Ahmed Rıza objects to the law.",
+    parties:[{ name:"Interior Ministry", m:["talat","drnazim","sakir"] },{ name:"Cabinet", m:["enver","cemal"] },{ name:"Senate", m:["riza"] }] },
+  { t:"e", date:"Apr–Aug 1915", title:"Gallipoli",
+    desc:"Kemal makes his name holding the heights at Arıburnu and Anafartalar, under War Minister Enver, who doesn't like him.",
+    parties:[{ name:"Front commander", m:["kemal"] },{ name:"War Minister", m:["enver"] }] },
+  { t:"e", date:"Sep 1916", title:"Yakub Cemil executed",
+    desc:"The gunman of 1913 is arrested, accused of plotting a coup against Enver, and executed.",
+    parties:[{ name:"Accused plotter", m:["yakub"] },{ name:"Regime", m:["talat","enver"] }], dies:["yakub"] },
+  { t:"e", date:"Feb 1917", title:"Talât takes over",
+    desc:"Sait Halim resigns and Talât becomes Grand Vizier himself.",
+    parties:[{ name:"Out", m:["sait"] },{ name:"In", m:["talat"] }] },
+  { t:"d", who:"ah", date:"10 Feb 1918" },
+  { t:"d", who:"m5", date:"3 Jul 1918" },
+  { t:"e", date:"30 Oct 1918", title:"Mudros armistice",
+    desc:"Navy Minister Rauf signs the armistice aboard HMS Agamemnon. Allied fleets soon anchor off Istanbul.",
+    parties:[{ name:"Signed", m:["rauf"] }] },
+  { t:"e", date:"2 Nov 1918", title:"Flight on a German ship",
+    desc:"After the armistice the CUP leadership slips out of Istanbul by night on a German torpedo boat.",
+    parties:[{ name:"Fled", m:["talat","enver","cemal","drnazim","sakir"] }] },
+  { t:"e", date:"May 1919", title:"Sent to Samsun",
+    desc:"Vahdettin and Damat Ferid's government send Kemal to Anatolia as an army inspector to keep order. He uses the post to organize the national resistance.",
+    parties:[{ name:"Istanbul", m:["vahdettin","ferid"] },{ name:"Inspector", m:["kemal"] }] },
+  { t:"e", date:"Jun–Jul 1919", title:"Amasya & Erzurum",
+    desc:"The Amasya circular declares the nation's independence in danger. Recalled to Istanbul, Kemal resigns his commission instead. Karabekir is ordered to arrest him, refuses, and puts his army corps behind him.",
+    parties:[{ name:"Amasya circular", m:["kemal","rauf"] },{ name:"Refused arrest order", m:["karabekir"] }] },
+  { t:"e", date:"1919–1920", title:"Istanbul courts-martial",
+    desc:"Under Allied occupation, Damat Ferid's courts-martial sentence the fled Unionist leaders to death in absentia in July 1919, and Kemal in May 1920.",
+    parties:[{ name:"Istanbul government", m:["vahdettin","ferid"] },{ name:"Sentenced in absentia", m:["talat","enver","cemal","drnazim","kemal"] }] },
+  { t:"e", date:"1919–1920", title:"Malta exiles",
+    desc:"The British deport scores of Unionist politicians and officers to Malta for trial, some of them arrested under Ferid's government in 1919 and more after Istanbul was occupied in March 1920. The trials never happen, and Ankara swaps them for British prisoners in 1921.",
+    parties:[{ name:"Arrested under", m:["ferid"] },{ name:"Deported to Malta", m:["sait","fethi","rauf"] }] },
+  { t:"e", date:"10 Aug 1920", title:"Treaty of Sèvres",
+    desc:"The sultan's government accepts a treaty carving up Anatolia. Ankara rejects it, and it is never applied.",
+    parties:[{ name:"Istanbul accepts", m:["vahdettin","ferid"] },{ name:"Ankara rejects", m:["kemal"] }] },
+  { t:"d", who:"talat", date:"15 Mar 1921" },
+  { t:"e", date:"Aug–Sep 1921", title:"Sakarya vs Batum",
+    desc:"While Kemal fights the Greek army at Sakarya, Enver waits at Batum on the border, ready to take over the movement if Kemal loses. Kemal wins, and Enver heads to Central Asia.",
+    parties:[{ name:"Commanding at Sakarya", m:["kemal"] },{ name:"Waiting at Batum", m:["enver"] }] },
+  { t:"d", who:"sait", date:"5 Dec 1921" },
+  { t:"d", who:"sakir", date:"17 Apr 1922" },
+  { t:"d", who:"cemal", date:"21 Jul 1922" },
+  { t:"d", who:"enver", date:"4 Aug 1922" },
+  { t:"e", date:"Nov 1922", title:"Sultanate abolished",
+    desc:"Ankara abolishes the sultanate on 1 November. Vahdettin leaves on the British battleship HMS Malaya, and Damat Ferid has already fled. Rauf is Ankara's Prime Minister.",
+    parties:[{ name:"Ankara", m:["kemal","rauf"] },{ name:"Fled", m:["vahdettin","ferid"] }] },
+  { t:"d", who:"ferid", date:"6 Oct 1923" },
+  { t:"e", date:"Mar 1924", title:"Dynasty exiled",
+    desc:"The caliphate is abolished and the whole Ottoman dynasty is banished, Sabahaddin included. He never returns.",
+    parties:[{ name:"Ankara", m:["kemal"] },{ name:"Banished dynasty", m:["sabahaddin"] }] },
+  { t:"e", date:"Nov 1924", title:"Terakkiperver party",
+    desc:"Karabekir, Rauf and other war heroes found the first opposition party, and Kemal makes Fethi Prime Minister. After the Sheikh Said revolt Fethi is replaced by İnönü, and the party is shut down in June 1925.",
+    parties:[{ name:"Government", m:["kemal","fethi"] },{ name:"Opposition founders", m:["rauf","karabekir"] }] },
+  { t:"d", who:"vahdettin", date:"16 May 1926" },
+  { t:"e", date:"Jun–Aug 1926", title:"İzmir plot trials",
+    desc:"A plot to assassinate Kemal in İzmir is uncovered, and the Independence Tribunals try former Unionists and Terakkiperver figures. Cavid and Dr. Nâzım are hanged. Rauf, abroad, gets ten years in absentia, and Karabekir is tried and acquitted.",
+    parties:[{ name:"Ankara / Tribunal", m:["kemal"] },{ name:"Hanged", m:["cavid","drnazim"] },{ name:"In absentia", m:["rauf"] },{ name:"Acquitted", m:["karabekir"] }], dies:["cavid","drnazim"] },
+  { t:"g", label:"1926 → 1930" },
+  { t:"d", who:"riza", date:"26 Feb 1930" },
+  { t:"e", date:"Aug–Nov 1930", title:"Free Republican Party",
+    desc:"At Kemal's suggestion, his old friend Fethi founds an opposition party. Fethi dissolves it after three months.",
+    parties:[{ name:"Asked for it", m:["kemal"] },{ name:"Founder", m:["fethi"] }] },
+  { t:"g", label:"1930 → 1938" },
+  { t:"d", who:"kemal", date:"10 Nov 1938" },
+  { t:"d", who:"sadik", date:"1940" },
+  { t:"d", who:"fethi", date:"7 May 1943" },
+  { t:"d", who:"karabekir", date:"26 Jan 1948" },
+  { t:"d", who:"sabahaddin", date:"30 Jun 1948" },
+  { t:"g", label:"1948 → 1964" },
+  { t:"d", who:"rauf", date:"16 Jul 1964" },
+];
+
+// ---------- layout ----------
+const LEFT = 196, COL = 50, TOP = 40, RIGHT = 24;
+const EH = 104, DH = 40, GH = 56, BH = 56, MS = 20, PGAP = 6, PAD = 6;
+const idx = Object.fromEntries(P.map((p, i) => [p.id, i]));
+const avg = a => a.reduce((s, v) => s + v, 0) / a.length;
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const ctx = document.createElement("canvas").getContext("2d");
+ctx.font = "600 9.5px system-ui, sans-serif";
+const textW = s => ctx.measureText(s.toUpperCase()).width * 1.04;
+
+let y = TOP;
+for (const r of ROWS) {
+  const h = r.t === "e" ? EH : r.t === "d" ? DH : GH;
+  r.y0 = y; r.y = y + h / 2; r.y1 = y + h; y += h;
+}
+const H = y + 50;
+
+// ---------- storyline layout: barycenter ordering + least-squares straightening ----------
+const ROWI = new Map(ROWS.map((r, i) => [r, i]));
+for (const p of P) {
+  p.s = ROWS.findIndex(r => r.t === "e" && r.parties.some(pt => pt.m.includes(p.id)));
+  const e = ROWS.findIndex(r => (r.t === "d" && r.who === p.id) || (r.t === "e" && (r.dies || []).includes(p.id)));
+  p.e = e < 0 ? Infinity : e;
+}
+const LAY = ROWS.map((r, i) => ({ r, i })).filter(o => o.r.t === "e");
+for (const l of LAY) {
+  const inv = new Set(l.r.parties.flatMap(pt => pt.m));
+  const alive = P.filter(p => p.s <= l.i && p.e >= l.i).map(p => p.id);
+  l.units = [{ box: true, parties: l.r.parties.map(pt => ({ name: pt.name, m: [...pt.m] })) }]
+    .concat(alive.filter(id => !inv.has(id)).map(id => ({ box: false, id })));
+}
+const members = u => (u.box ? u.parties.flatMap(pt => pt.m) : [u.id]);
+const rankOf = l => { const m = {}; let k = 0; for (const u of l.units) for (const id of members(u)) m[id] = k++; return m; };
+const mean = a => (a.length ? a.reduce((s, v) => s + v, 0) / a.length : undefined);
+
+function sortLayer(l, ref) {
+  const cur = rankOf(l);
+  const bc = id => (ref[id] !== undefined ? ref[id] : undefined);
+  for (const u of l.units) {
+    if (u.box) {
+      for (const pt of u.parties) {
+        const pm = mean(pt.m.map(bc).filter(v => v !== undefined));
+        pt.m.sort((a, b) => (bc(a) ?? pm ?? cur[a]) - (bc(b) ?? pm ?? cur[b]) || cur[a] - cur[b]);
+        pt.bc = pm;
+      }
+      const bm = mean(u.parties.map(pt => pt.bc).filter(v => v !== undefined));
+      u.parties.sort((a, b) => (a.bc ?? bm ?? 0) - (b.bc ?? bm ?? 0));
+      u.bc = bm;
+    } else u.bc = bc(u.id);
+    u.cur = mean(members(u).map(id => cur[id]));
+  }
+  l.units.sort((a, b) => (a.bc ?? a.cur) - (b.bc ?? b.cur) || a.cur - b.cur);
+}
+function crossings() {
+  let c = 0;
+  for (let k = 0; k + 1 < LAY.length; k++) {
+    const a = rankOf(LAY[k]), b = rankOf(LAY[k + 1]);
+    const both = Object.keys(a).filter(id => b[id] !== undefined).sort((x, y) => a[x] - a[y]);
+    for (let i = 0; i < both.length; i++) for (let j = i + 1; j < both.length; j++) if (b[both[i]] > b[both[j]]) c++;
+  }
+  return c;
+}
+const snapshot = () => LAY.map(l => JSON.parse(JSON.stringify(l.units)));
+let best = null, bestC = Infinity;
+for (let it = 0; it < 40; it++) {
+  for (let k = 1; k < LAY.length; k++) sortLayer(LAY[k], rankOf(LAY[k - 1]));
+  for (let k = LAY.length - 2; k >= 0; k--) sortLayer(LAY[k], rankOf(LAY[k + 1]));
+  const c = crossings();
+  if (c < bestC) { bestC = c; best = snapshot(); }
+}
+LAY.forEach((l, k) => (l.units = best[k]));
+
+// unit geometry: party boxes and member offsets inside each event box
+for (const l of LAY) for (const u of l.units) {
+  if (!u.box) { u.w = 0; continue; }
+  let x = PAD; u.off = {};
+  for (const pt of u.parties) {
+    pt.w = Math.max(pt.m.length * MS + 14, textW(pt.name) + 14);
+    pt.dx = x;
+    const st = x + pt.w / 2 - (pt.m.length - 1) * MS / 2;
+    pt.m.forEach((id, i) => (u.off[id] = st + i * MS));
+    x += pt.w + PGAP;
+  }
+  u.w = x - PGAP + PAD;
+}
+const SEP = (a, b) => (a.box && b.box ? 16 : a.box || b.box ? 12 : 16);
+
+// x of a member given its unit's centre
+const memberX = (u, id, c) => (u.box ? c - u.w / 2 + u.off[id] : c);
+function solveLayer(l, target) {
+  const U = l.units, n = U.length, o = new Array(n);
+  o[0] = 0;
+  for (let i = 1; i < n; i++) o[i] = o[i - 1] + U[i - 1].w / 2 + SEP(U[i - 1], U[i]) + U[i].w / 2;
+  // desired centres and weights
+  const d = [], w = [];
+  U.forEach((u, i) => {
+    const ds = members(u).filter(id => target[id] !== undefined).map(id => target[id] - (u.box ? u.off[id] - u.w / 2 : 0));
+    if (ds.length) { d[i] = mean(ds); w[i] = ds.length; } else { d[i] = u.c ?? o[i]; w[i] = 0.01; }
+  });
+  // isotonic regression (pool adjacent violators) on d - o
+  const blocks = [];
+  for (let i = 0; i < n; i++) {
+    blocks.push({ v: d[i] - o[i], w: w[i], n: 1 });
+    while (blocks.length > 1 && blocks[blocks.length - 2].v > blocks[blocks.length - 1].v) {
+      const b = blocks.pop(), a = blocks.pop();
+      blocks.push({ v: (a.v * a.w + b.v * b.w) / (a.w + b.w), w: a.w + b.w, n: a.n + b.n });
+    }
+  }
+  let i = 0;
+  for (const b of blocks) for (let k = 0; k < b.n; k++, i++) U[i].c = b.v + o[i];
+  l.x = {};
+  for (const u of U) for (const id of members(u)) l.x[id] = memberX(u, id, u.c);
+}
+// initial: packed; then relax towards neighbours
+for (const l of LAY) solveLayer(l, {});
+for (let it = 0; it < 600; it++) {
+  const order = it % 2 ? [...LAY.keys()].reverse() : [...LAY.keys()];
+  for (const k of order) {
+    const t = {};
+    for (const id of Object.keys(LAY[k].x)) {
+      const nb = [LAY[k - 1], LAY[k + 1]].filter(l => l && l.x[id] !== undefined).map(l => l.x[id]);
+      if (nb.length) t[id] = mean(nb);
+    }
+    solveLayer(LAY[k], t);
+  }
+}
+// final top-down pass: lines not in an event stay exactly where they were (no drift);
+// event participants keep their relaxed positions as targets
+{
+  const relaxed = LAY.map(l => ({ ...l.x }));
+  for (let k = 1; k < LAY.length; k++) {
+    const l = LAY[k], prev = LAY[k - 1], t = {};
+    const inv = new Set(l.units.filter(u => u.box).flatMap(members));
+    for (const id of Object.keys(l.x)) {
+      if (!inv.has(id) && prev.x[id] !== undefined) t[id] = prev.x[id];
+      else t[id] = relaxed[k][id];
+    }
+    solveLayer(l, t);
+  }
+}
+// shift so the leftmost edge sits at LEFT
+let minX = Infinity, maxX = -Infinity;
+for (const l of LAY) for (const u of l.units) { minX = Math.min(minX, u.c - u.w / 2); maxX = Math.max(maxX, u.c + u.w / 2); }
+const SHIFT = LEFT + 14 - minX;
+for (const l of LAY) { for (const u of l.units) u.c += SHIFT; for (const id in l.x) l.x[id] += SHIFT; }
+const W = maxX + SHIFT + RIGHT;
+
+// hand the result to the renderer
+for (const l of LAY) {
+  const r = l.r, u = l.units.find(u => u.box);
+  r.box = { x0: u.c - u.w / 2, w: u.w };
+  r.parties = u.parties.map(pt => ({ ...pt, x0: u.c - u.w / 2 + pt.dx }));
+  r.pos = {}; for (const id of members(u)) r.pos[id] = l.x[id];
+  r.x = l.x;
+}
+
+// person paths
+for (const p of P) {
+  const ls = LAY.filter(l => l.x[p.id] !== undefined);
+  const pts = [];
+  const first = ls[0];
+  pts.push([first.x[p.id], first.r.y0 + 6]); p.start = pts[0];
+  p.end = null;
+  for (const l of ls) {
+    const x = l.x[p.id], r = l.r;
+    pts.push([x, r.y - BH / 2 - 4]);
+    if ((r.dies || []).includes(p.id)) { pts.push([x, r.y + 8]); p.end = { x, y: r.y + 8 }; break; }
+    pts.push([x, r.y + BH / 2 + 4]);
+  }
+  if (!p.end) {
+    const last = ls[ls.length - 1].x[p.id];
+    if (p.e !== Infinity) { const r = ROWS[p.e]; pts.push([last, r.y]); p.end = { x: last, y: r.y }; }
+    else pts.push([last, H - 20]);
+  }
+  p.pts = pts;
+  p.d = pts.map((pt, i) => {
+    if (i === 0) return `M${pt[0]},${pt[1]}`;
+    const [x1, y1] = pts[i - 1], [x2, y2] = pt;
+    if (Math.abs(x1 - x2) < .5) return `L${x2},${y2}`;
+    const ym = (y1 + y2) / 2;
+    return `C${x1},${ym} ${x2},${ym} ${x2},${y2}`;
+  }).join(" ");
+}
+console.log("crossings", bestC);
+
+// ---------- render ----------
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("chart");
+svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+svg.setAttribute("width", W); svg.setAttribute("height", H);
+const el = (tag, attrs = {}, parent = svg) => {
+  const n = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  parent.appendChild(n); return n;
+};
+const text = (str, attrs, parent) => { const t = el("text", attrs, parent); t.textContent = str; return t; };
+
+// legend
+const lg = document.getElementById("legend");
+for (const [g, label] of Object.entries(GROUPS)) {
+  const s = document.createElement("span");
+  s.innerHTML = `<i style="background:${GROUP_COLOR[g]}"></i>${label}`;
+  lg.appendChild(s);
+}
+
+const gBack = el("g"), gLines = el("g"), gBoxes = el("g"), gTop = el("g");
+
+for (const r of ROWS) {
+  if (r.t === "g") {
+    el("rect", { x: 0, y: r.y0 + 8, width: W, height: GH - 16, class: "gapband" }, gBack);
+    text(r.label, { x: 16, y: r.y + 4, class: "gaptext" }, gBack);
+  } else if (r.t === "e") {
+    el("line", { x1: 12, x2: W - 8, y1: r.y0, y2: r.y0, class: "rowline" }, gBack);
+    text(r.date, { x: 16, y: r.y - 6, class: "date" }, gBack);
+    const words = r.title.split(" "); const lines = [""];
+    for (const w of words) { const cur = lines[lines.length - 1]; if ((cur + " " + w).trim().length > 24) lines.push(w); else lines[lines.length - 1] = (cur + " " + w).trim(); }
+    lines.forEach((l, i) => text(l, { x: 16, y: r.y + 9 + i * 14, class: "etitle" }, gBack));
+  } else if (r.t === "d") {
+    const p = P[idx[r.who]];
+    text(r.date, { x: 16, y: r.y - 3, class: "dlabel" }, gBack);
+    text(`† ${p.name}`, { x: 16, y: r.y + 11, class: "dlabel" }, gBack).style.fill = p.c;
+  }
+}
+
+// ---------- interaction: hover with a mouse, tap/click anywhere ----------
+const tip = document.getElementById("tip");
+let pinned = false;
+function moveTip(e) {
+  const pad = 14, r = tip.getBoundingClientRect();
+  let x = e.clientX + pad, y = e.clientY + pad;
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - pad;
+  tip.style.left = clamp(x, 8, Math.max(8, innerWidth - r.width - 8)) + "px";
+  tip.style.top = clamp(y, 8, Math.max(8, innerHeight - r.height - 8)) + "px";
+}
+function clearAll() {
+  svg.classList.remove("focus");
+  svg.querySelectorAll(".person.on").forEach(n => n.classList.remove("on"));
+  tip.style.display = "none";
+}
+function show(html, personId, e) {
+  clearAll();
+  if (personId) {
+    svg.classList.add("focus");
+    svg.querySelectorAll(`.person[data-id="${personId}"]`).forEach(n => n.classList.add("on"));
+  }
+  tip.innerHTML = html; tip.style.display = "block"; moveTip(e);
+}
+function bind(node, html, personId) {
+  node.style.cursor = "pointer";
+  node.addEventListener("pointerenter", e => { if (e.pointerType === "mouse" && !pinned) show(html(), personId, e); });
+  node.addEventListener("pointermove", e => { if (e.pointerType === "mouse" && !pinned) moveTip(e); });
+  node.addEventListener("pointerleave", e => { if (e.pointerType === "mouse" && !pinned) clearAll(); });
+  node.addEventListener("click", e => { e.stopPropagation(); pinned = true; show(html(), personId, e); });
+}
+document.addEventListener("click", () => { if (pinned) { pinned = false; clearAll(); } });
+
+const personTip = p => `<b style="color:${p.c}">${p.name}</b><div class="m">${GROUPS[p.g]}</div><div style="margin-top:4px">${p.bio}</div><div style="margin-top:6px">✕ ${p.death}</div>`;
+
+for (const p of P) {
+  const g = el("g", { class: "person", "data-id": p.id }, gLines);
+  el("path", { d: p.d, stroke: p.c, class: "life" }, g);
+  const [sx, sy] = p.start;
+  el("circle", { cx: sx, cy: sy, r: 3.5, fill: p.c, class: "dot" }, g);
+  const lbl = text(p.name, { x: sx + 5, y: sy - 3, class: "slabel", fill: p.c, transform: `rotate(-35 ${sx + 5} ${sy - 3})` }, g);
+  if (!p.end) {
+    const [ex, ey] = p.pts[p.pts.length - 1];
+    el("path", { d: `M${ex - 5},${ey - 6} L${ex},${ey} L${ex + 5},${ey - 6}`, stroke: p.c, fill: "none", "stroke-width": 2 }, g);
+  }
+  const hit = el("path", { d: p.d, class: "hit" }, g);
+  bind(hit, () => personTip(p), p.id);
+  bind(lbl, () => personTip(p), p.id);
+}
+
+for (const r of ROWS.filter(r => r.t === "e")) {
+  const top = r.y - BH / 2;
+  const box = el("rect", { x: r.box.x0, y: top, width: r.box.w, height: BH, rx: 8, class: "ebox" }, gBoxes);
+  const partyHtml = r.parties.map(pt => `<li><b style="font-size:12px">${pt.name}:</b> ${pt.m.map(id => `<span style="color:${P[idx[id]].c}">${P[idx[id]].name}</span>`).join(", ")}</li>`).join("");
+  const html = `<b>${r.title}</b><div class="m">${r.date}</div><div style="margin-top:4px">${r.desc}</div><ul>${partyHtml}</ul>`;
+  bind(box, () => html, null);
+  for (const pt of r.parties) {
+    el("rect", { x: pt.x0, y: top + 4, width: pt.w, height: BH - 8, rx: 5, class: "pbox" }, gBoxes).style.pointerEvents = "none";
+    text(pt.name, { x: pt.x0 + pt.w / 2, y: top + 15, "text-anchor": "middle", class: "plabel" }, gBoxes);
+    for (const id of pt.m) {
+      const p = P[idx[id]], x = r.pos[id];
+      const dies = (r.dies || []).includes(id);
+      const g = el("g", { class: "person", "data-id": id }, gTop);
+      el("line", { x1: x, x2: x, y1: top + 21, y2: dies ? r.y + 8 : top + BH, stroke: p.c, class: "seg" }, g);
+      if (!dies) el("circle", { cx: x, cy: r.y + 6, r: 4, fill: p.c, class: "dot" }, g);
+      const hit = el("rect", { x: x - 7, y: top + 19, width: 14, height: BH - 19, fill: "transparent" }, g);
+      bind(hit, () => personTip(p), p.id);
+    }
+  }
+}
+
+for (const p of P) {
+  if (!p.end) continue;
+  const g = el("g", { class: "person death", "data-id": p.id }, gTop);
+  const { x, y } = p.end;
+  el("circle", { cx: x, cy: y, r: 10, fill: "var(--bg)", stroke: p.c, "stroke-width": 1.5 }, g);
+  text("✕", { x, y: y + 5, "text-anchor": "middle", fill: p.c }, g);
+  bind(g, () => `<b style="color:${p.c}">✕ ${p.name}</b><div style="margin-top:4px">${p.death}</div>`, p.id);
+}
+</script>
+
+</body>
+</html>
