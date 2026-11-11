@@ -251,19 +251,19 @@ for (const r of ROWS) if (r.t === "e" && IMG_FILES[r.wiki] && !usedImg.has(IMG_F
 
 // Coalitions against France, shaded from the event they formed around to the one that ended them
 const SPANS = [
-  { from:"War", to:"18 Fructidor", label:"1st Coalition", date:"1792–1797",
+  { from:"War", to:"18 Fructidor", label:"1st Coalition", result:"French victory", date:"1792–1797",
     desc:"Austria and Prussia, joined in 1793 by Britain, Spain, the Dutch Republic, Sardinia and others. Prussia and Spain made peace in 1795, Austria at Campo Formio in October 1797, leaving Britain alone." },
-  { from:"18 Brumaire", to:"Rue Saint-Nicaise", label:"2nd Coalition", date:"1798–1802",
+  { from:"18 Brumaire", to:"Rue Saint-Nicaise", label:"2nd Coalition", result:"French victory", date:"1798–1802",
     desc:"Britain, Austria, Russia, the Ottoman Empire, Naples and Portugal. Russia left in 1799. After Marengo and Hohenlinden, Austria made peace at Lunéville in 1801 and Britain at Amiens in 1802." },
-  { from:"Austerlitz", to:"Austerlitz", label:"3rd Coalition", date:"1805",
+  { from:"Austerlitz", to:"Austerlitz", label:"3rd Coalition", result:"French victory on land; Britain won at sea at Trafalgar", date:"1805",
     desc:"Britain, Austria, Russia, Sweden and Naples. Ended by Austerlitz and the Peace of Pressburg in December 1805." },
-  { from:"Jena", to:"Tilsit", label:"4th Coalition", date:"1806–1807",
+  { from:"Jena", to:"Tilsit", label:"4th Coalition", result:"French victory", date:"1806–1807",
     desc:"Prussia, Russia, Saxony, Sweden and Britain. Prussia was beaten at Jena and Auerstedt; the war ended with the treaties of Tilsit in July 1807." },
-  { from:"Wagram", to:"Wagram", label:"5th Coalition", date:"1809",
+  { from:"Wagram", to:"Wagram", label:"5th Coalition", result:"French victory", date:"1809",
     desc:"Austria and Britain. Ended by Wagram and the Treaty of Schönbrunn in October 1809." },
-  { from:"Dresden and Leipzig", to:"First abdication", label:"6th Coalition", date:"1813–1814",
+  { from:"Dresden and Leipzig", to:"First abdication", label:"6th Coalition", result:"Coalition victory", date:"1813–1814",
     desc:"Russia, Prussia, Britain, Sweden, Austria, Spain, Portugal and several German states. Ended with Napoleon's abdication in April 1814." },
-  { from:"Hundred Days", to:"Second Restoration", label:"7th Coalition", date:"1815",
+  { from:"Hundred Days", to:"Second Restoration", label:"7th Coalition", result:"Coalition victory", date:"1815",
     desc:"Britain, Prussia, Austria, Russia, Sweden, the Netherlands and others. Ended with Waterloo and the second Treaty of Paris in November 1815." },
 ];
 

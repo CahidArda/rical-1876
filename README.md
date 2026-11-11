@@ -80,7 +80,7 @@ photographs of people are deliberately left out, which is why most of the Ottoma
 parties and their members; `dies` marks people who die in that event.
 
 A timeline can also export `SPANS`: periods drawn as a faint band from one event (`from`, by
-title) to another (`to`), with a bracket and labels at its start and end on the right edge, and a tooltip (`label`,
+title) to another (`to`), with a bracket and labels at its start and end on the right edge, and a tooltip (`label`, `result`,
 `date`, `desc`). The French timeline uses them for the seven coalitions.
 
 ## Deployment
