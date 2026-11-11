@@ -3,22 +3,23 @@
 > Made by Cahid Arda Öz with Claude. The app was prepared with AI, so details may be wrong.
 > The historical content was written by the agent; it isn't my claim or opinion.
 
-**Pashas, plots and gallows.** An interactive storyline of the late Ottoman statesmen
-(*ricâl-i devlet*), 1865–1964: who stood with whom, who turned on whom, and who outlived whom.
+Interactive storylines of chaotic political eras: who stood with whom, who turned on whom,
+and who outlived whom. Three timelines, switchable with the tabs at the top:
+
+| Tab | Span | Cast |
+|---|---|---|
+| Ottoman Empire (`#ottoman`) | 1865–1964 | Midhat, Abdülhamid, Enver, Talât, Kemal and the rest of the *ricâl-i devlet* |
+| Roman Republic (`#rome`) | 107–27 BC | Marius, Sulla, Pompey, Crassus, Caesar, Cicero, Cato, Brutus, Antony, Octavian |
+| French Revolution (`#france`) | 1789–1838 | Lafayette, Danton, Robespierre, Fouché, Talleyrand, Barras, Napoleon |
 
 Each vertical line is a person and time flows down. When people take part in an event their
-lines merge into the event's box, each sitting inside the party they were on: raiders and
-government, sentenced and court, sent away and those who sent them. A line ends where the
-person dies. Hover over a line, a box or a ✕ for details, or tap it on a phone.
-
-The cast runs from the Young Ottomans and the 1876 deposition of Abdülaziz, through Midhat
-Paşa, the Çerkes Hasan raid, 1908, 31 Mart, the Bab-ı Ali raid, the triumvirate and the
-Malta exiles, to the national movement and the opposition parties of the Republic.
+lines merge into the event's box, each sitting inside the party they were on. A line ends
+where the person dies. Hover over a line, a box or a ✕ for details, or tap it on a phone.
 
 ## How it is built
 
-One self-contained `index.html`: the data (people, events, parties) and the renderer are
-plain JavaScript drawing an SVG. No build step, no dependencies.
+Static files, no build step, no dependencies: `index.html` holds the renderer (plain
+JavaScript drawing an SVG), and each timeline is a data file in `timelines/`.
 
 The layout is a storyline visualization, in the spirit of Tanahashi & Ma (2012) and
 StoryFlow (Liu et al., 2013):
@@ -42,8 +43,10 @@ or just open `index.html` in a browser.
 
 ## Editing the data
 
-`P` (people: name, faction, colour, bio, how they died) and `ROWS` (events, deaths and
-time gaps, in order) sit at the top of the script in `index.html`. An event lists its
+Each file in `timelines/` defines `GROUPS` (factions and colours), `P` (people: name,
+faction, colour, bio, how they died) and `ROWS` (events, deaths and time gaps, in order),
+and registers itself on `window.TIMELINES`. To add a timeline, add a file, a `<script>` tag
+and its id in `TL_ORDER` in `index.html`. An event lists its
 parties and their members; `dies` marks people who die in that event. The layout is
 recomputed on load.
 
