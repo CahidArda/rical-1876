@@ -38,7 +38,7 @@ the timelines, `index.html` or `bake.py`, and commits the result if anything cha
 forget and the Action hasn't run yet, nothing breaks: the cache entry carries a signature of the data, and on a
 mismatch the page solves the layout in the browser; the live copy replaces the stale
 pre-drawn one as soon as the script runs. `bake.py` also warns if a
-timeline gets wider than the shared desktop width (`MIN_W`, 1150px), which keeps tabs from
+timeline gets wider than the shared desktop width (`MIN_W`, 1170px), which keeps tabs from
 shifting when you switch.
 
 The layout is a storyline visualization, in the spirit of Tanahashi & Ma (2012) and
