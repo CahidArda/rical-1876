@@ -28,21 +28,24 @@
   .top .tabs { margin: 0; }
   @media (max-width: 759.98px) {
     /* one swipeable row of tabs on phones */
-    .top .tabs { flex-wrap: nowrap; overflow-x: auto; width: calc(100% + 32px); margin: 0 -16px; padding: 0 16px; scrollbar-width: none; }
+    .top .tabs { display: flex; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
     .top .tabs::-webkit-scrollbar { display: none; }
     .tabs a { white-space: nowrap; flex: none; }
-    .links { padding-top: 0; }
+    .top .links { padding-top: 0; }
   }
-  .links { font-size: 13px; color: var(--muted); padding-top: 6px; white-space: nowrap; }
+  .links { font-size: 13px; color: var(--muted); padding-top: 14px; white-space: nowrap; }
   .links a, footer a { color: var(--muted); text-decoration: none; }
   .links a:hover, footer a:hover { color: var(--fg); }
   .note { color: var(--muted); font-size: 12px; margin: -10px 0 18px; opacity: .85; }
   footer p { margin: 0 0 6px; }
-  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; }
-  .tabs a { font-size: 13px; color: var(--muted); text-decoration: none; padding: 5px 11px; border: 1px solid var(--grid); border-radius: 999px; }
-  .tabs a span { opacity: .7; margin-left: 4px; }
-  .tabs a:hover { color: var(--fg); border-color: var(--box-stroke); }
-  .tabs a.on { color: var(--fg); border-color: var(--fg); }
+  /* segmented control: name over years, the selected one a solid pill */
+  .tabs { display: inline-flex; gap: 2px; padding: 3px; margin: 0 0 16px; background: var(--party); border: 1px solid var(--grid); border-radius: 12px; }
+  .tabs a { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 6px 14px 7px; border-radius: 9px;
+    font-size: 13px; font-weight: 550; line-height: 1.25; color: var(--muted); text-decoration: none; white-space: nowrap; transition: background .15s, color .15s; }
+  .tabs a span { font-size: 11px; font-weight: 400; opacity: .75; font-variant-numeric: tabular-nums; }
+  .tabs a:hover { color: var(--fg); background: var(--box); }
+  .tabs a.on, .tabs a.on:hover { color: var(--bg); background: var(--fg); }
+  .tabs a.on span { opacity: .7; }
   h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.01em; }
   .sub { color: var(--muted); margin: 0 0 18px; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); }
@@ -112,27 +115,27 @@
 <style id="baked-css">
 :is(html[data-tl="ottoman"], html:not([data-tl])) #title .baked[data-tl="ottoman"] { display: inline; }
 :is(html[data-tl="ottoman"], html:not([data-tl])) #legends .baked[data-tl="ottoman"] { display: flex; }
-:is(html[data-tl="ottoman"], html:not([data-tl])) #tabs a[data-tl="ottoman"] { color: var(--fg); border-color: var(--fg); }
+:is(html[data-tl="ottoman"], html:not([data-tl])) #tabs a[data-tl="ottoman"] { color: var(--bg); background: var(--fg); }
 @media (min-width: 760px) { :is(html[data-tl="ottoman"], html:not([data-tl])) #charts .baked[data-tl="ottoman"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { :is(html[data-tl="ottoman"], html:not([data-tl])) #charts .baked[data-tl="ottoman"][data-v="m"] { display: block; } }
 html[data-tl="rome"] #title .baked[data-tl="rome"] { display: inline; }
 html[data-tl="rome"] #legends .baked[data-tl="rome"] { display: flex; }
-html[data-tl="rome"] #tabs a[data-tl="rome"] { color: var(--fg); border-color: var(--fg); }
+html[data-tl="rome"] #tabs a[data-tl="rome"] { color: var(--bg); background: var(--fg); }
 @media (min-width: 760px) { html[data-tl="rome"] #charts .baked[data-tl="rome"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { html[data-tl="rome"] #charts .baked[data-tl="rome"][data-v="m"] { display: block; } }
 html[data-tl="america"] #title .baked[data-tl="america"] { display: inline; }
 html[data-tl="america"] #legends .baked[data-tl="america"] { display: flex; }
-html[data-tl="america"] #tabs a[data-tl="america"] { color: var(--fg); border-color: var(--fg); }
+html[data-tl="america"] #tabs a[data-tl="america"] { color: var(--bg); background: var(--fg); }
 @media (min-width: 760px) { html[data-tl="america"] #charts .baked[data-tl="america"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { html[data-tl="america"] #charts .baked[data-tl="america"][data-v="m"] { display: block; } }
 html[data-tl="france"] #title .baked[data-tl="france"] { display: inline; }
 html[data-tl="france"] #legends .baked[data-tl="france"] { display: flex; }
-html[data-tl="france"] #tabs a[data-tl="france"] { color: var(--fg); border-color: var(--fg); }
+html[data-tl="france"] #tabs a[data-tl="france"] { color: var(--bg); background: var(--fg); }
 @media (min-width: 760px) { html[data-tl="france"] #charts .baked[data-tl="france"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { html[data-tl="france"] #charts .baked[data-tl="france"][data-v="m"] { display: block; } }
 html[data-tl="bolsheviks"] #title .baked[data-tl="bolsheviks"] { display: inline; }
 html[data-tl="bolsheviks"] #legends .baked[data-tl="bolsheviks"] { display: flex; }
-html[data-tl="bolsheviks"] #tabs a[data-tl="bolsheviks"] { color: var(--fg); border-color: var(--fg); }
+html[data-tl="bolsheviks"] #tabs a[data-tl="bolsheviks"] { color: var(--bg); background: var(--fg); }
 @media (min-width: 760px) { html[data-tl="bolsheviks"] #charts .baked[data-tl="bolsheviks"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { html[data-tl="bolsheviks"] #charts .baked[data-tl="bolsheviks"][data-v="m"] { display: block; } }
 </style>
