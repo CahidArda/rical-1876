@@ -90,7 +90,7 @@ const ROWS = [
     parties:[{ name:"Founders", m:["lenin","zinoviev"] },{ name:"Co-opted", m:["stalin"] },{ name:"Pravda", m:["molotov"] }] },
   { t:"e", date:"Aug 1914", title:"War",
     desc:"Russia goes to war with Germany and Austria-Hungary. Most European socialist parties back their governments, and so does Plekhanov. Lenin, Martov and Trotsky oppose the war; Lenin, briefly arrested in Austrian Galicia, moves to Switzerland.",
-    parties:[{ name:"Went to war", m:["nicholas"] },{ name:"Backed the war", m:["plekhanov"] },{ name:"Opposed it", m:["lenin","martov","trotsky"] }] },
+    parties:[{ name:"Moved to Switzerland", m:["lenin"] },{ name:"Opposed it", m:["martov","trotsky"] }] },
   { t:"e", date:"Sep 1915", title:"Zimmerwald",
     desc:"Socialists against the war meet in a Swiss village. Lenin, Zinoviev and Radek form a left wing calling to turn the war into a civil war; Trotsky and Martov take more moderate positions.",
     parties:[{ name:"Zimmerwald Left", m:["lenin","zinoviev","radek"] },{ name:"Also there", m:["trotsky","martov"] }] },
