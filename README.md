@@ -10,7 +10,9 @@ and who outlived whom. Three timelines, switchable with the tabs at the top:
 |---|---|---|
 | Ottoman Empire (`#ottoman`) | 1865–1964 | Midhat, Abdülhamid, Enver, Talât, Kemal and the rest of the *ricâl-i devlet* |
 | Roman Republic (`#rome`) | 133–27 BC | the Gracchi, Marius, Sulla, Pompey, Crassus, Caesar, Cicero, Cato, Brutus, Antony, Octavian |
+| American Revolution (`#america`) | 1765–1836 | Washington, Franklin, Adams, Jefferson, Hamilton, Burr, Arnold, Lafayette, George III |
 | French Revolution (`#france`) | 1789–1850 | Lafayette, Danton, Robespierre, Fouché, Talleyrand, Barras, Napoleon, Bernadotte |
+| Bolsheviks (`#bolsheviks`) | 1903–1953 | Lenin, Martov, Trotsky, Zinoviev, Kamenev, Bukharin, Stalin, Molotov, Beria |
 
 Each vertical line is a person and time flows down. When people take part in an event their
 lines merge into the event's box, each sitting inside the party they were on. A line ends
@@ -38,7 +40,7 @@ the timelines, `index.html` or `bake.py`, and commits the result if anything cha
 forget and the Action hasn't run yet, nothing breaks: the cache entry carries a signature of the data, and on a
 mismatch the page solves the layout in the browser; the live copy replaces the stale
 pre-drawn one as soon as the script runs. `bake.py` also warns if a
-timeline gets wider than the shared desktop width (`MIN_W`, 1170px), which keeps tabs from
+timeline gets wider than the shared desktop width (`MIN_W`, 1180px), which keeps tabs from
 shifting when you switch.
 
 The layout is a storyline visualization, in the spirit of Tanahashi & Ma (2012) and
