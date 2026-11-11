@@ -57,15 +57,15 @@
   .chap b { display: block; font-size: 24px; font-weight: 650; letter-spacing: -0.015em; }
   .chap em { display: block; font-style: normal; font-size: 14px; color: var(--muted); margin-top: 4px; }
   @media (max-width: 759.98px) { .chap { grid-template-columns: 1fr; } .chap a.next { grid-column: 1; } .chap b { font-size: 20px; } }
-  /* numbered contents: a rule above each entry, the selected one drawn heavier */
+  /* numbered contents: a rule under each entry, the selected one drawn heavier */
   .tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0 24px; margin: 0; counter-reset: tab; }
-  .tabs a { display: block; padding: 10px 0 2px; border-top: 1px solid var(--grid); color: var(--muted); text-decoration: none;
+  .tabs a { display: block; padding: 0 0 12px; border-bottom: 1px solid var(--grid); color: var(--muted); text-decoration: none;
     font-size: 14px; font-weight: 550; line-height: 1.3; letter-spacing: -0.005em; transition: color .15s, border-color .15s; }
   .tabs a::before { counter-increment: tab; content: counter(tab, decimal-leading-zero); display: block; margin-bottom: 4px;
     font-size: 11px; font-weight: 500; letter-spacing: .04em; font-variant-numeric: tabular-nums; color: var(--muted); }
   .tabs a span { display: block; margin-top: 1px; font-size: 12px; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .tabs a:hover { color: var(--fg); border-top-color: var(--muted); }
-  .tabs a.on { color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }
+  .tabs a:hover { color: var(--fg); border-bottom-color: var(--muted); }
+  .tabs a.on { color: var(--fg); border-bottom: 2px solid var(--fg); padding-bottom: 11px; }
   .tabs a.on::before { color: var(--fg); }
   h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.01em; }
   .sub { color: var(--muted); margin: 0 0 18px; }
@@ -137,35 +137,35 @@
 :is(html[data-tl="rome"], html:not([data-tl])) #title .baked[data-tl="rome"] { display: inline; }
 :is(html[data-tl="rome"], html:not([data-tl])) #legends .baked[data-tl="rome"] { display: flex; }
 :is(html[data-tl="rome"], html:not([data-tl])) #chapters .baked[data-tl="rome"] { display: grid; }
-:is(html[data-tl="rome"], html:not([data-tl])) #tabs a[data-tl="rome"] { color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }
+:is(html[data-tl="rome"], html:not([data-tl])) #tabs a[data-tl="rome"] { color: var(--fg); border-bottom: 2px solid var(--fg); padding-bottom: 11px; }
 :is(html[data-tl="rome"], html:not([data-tl])) #tabs a[data-tl="rome"]::before { color: var(--fg); }
 @media (min-width: 760px) { :is(html[data-tl="rome"], html:not([data-tl])) #charts .baked[data-tl="rome"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { :is(html[data-tl="rome"], html:not([data-tl])) #charts .baked[data-tl="rome"][data-v="m"] { display: block; } }
 html[data-tl="america"] #title .baked[data-tl="america"] { display: inline; }
 html[data-tl="america"] #legends .baked[data-tl="america"] { display: flex; }
 html[data-tl="america"] #chapters .baked[data-tl="america"] { display: grid; }
-html[data-tl="america"] #tabs a[data-tl="america"] { color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }
+html[data-tl="america"] #tabs a[data-tl="america"] { color: var(--fg); border-bottom: 2px solid var(--fg); padding-bottom: 11px; }
 html[data-tl="america"] #tabs a[data-tl="america"]::before { color: var(--fg); }
 @media (min-width: 760px) { html[data-tl="america"] #charts .baked[data-tl="america"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { html[data-tl="america"] #charts .baked[data-tl="america"][data-v="m"] { display: block; } }
 html[data-tl="france"] #title .baked[data-tl="france"] { display: inline; }
 html[data-tl="france"] #legends .baked[data-tl="france"] { display: flex; }
 html[data-tl="france"] #chapters .baked[data-tl="france"] { display: grid; }
-html[data-tl="france"] #tabs a[data-tl="france"] { color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }
+html[data-tl="france"] #tabs a[data-tl="france"] { color: var(--fg); border-bottom: 2px solid var(--fg); padding-bottom: 11px; }
 html[data-tl="france"] #tabs a[data-tl="france"]::before { color: var(--fg); }
 @media (min-width: 760px) { html[data-tl="france"] #charts .baked[data-tl="france"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { html[data-tl="france"] #charts .baked[data-tl="france"][data-v="m"] { display: block; } }
 html[data-tl="ottoman"] #title .baked[data-tl="ottoman"] { display: inline; }
 html[data-tl="ottoman"] #legends .baked[data-tl="ottoman"] { display: flex; }
 html[data-tl="ottoman"] #chapters .baked[data-tl="ottoman"] { display: grid; }
-html[data-tl="ottoman"] #tabs a[data-tl="ottoman"] { color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }
+html[data-tl="ottoman"] #tabs a[data-tl="ottoman"] { color: var(--fg); border-bottom: 2px solid var(--fg); padding-bottom: 11px; }
 html[data-tl="ottoman"] #tabs a[data-tl="ottoman"]::before { color: var(--fg); }
 @media (min-width: 760px) { html[data-tl="ottoman"] #charts .baked[data-tl="ottoman"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { html[data-tl="ottoman"] #charts .baked[data-tl="ottoman"][data-v="m"] { display: block; } }
 html[data-tl="bolsheviks"] #title .baked[data-tl="bolsheviks"] { display: inline; }
 html[data-tl="bolsheviks"] #legends .baked[data-tl="bolsheviks"] { display: flex; }
 html[data-tl="bolsheviks"] #chapters .baked[data-tl="bolsheviks"] { display: grid; }
-html[data-tl="bolsheviks"] #tabs a[data-tl="bolsheviks"] { color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }
+html[data-tl="bolsheviks"] #tabs a[data-tl="bolsheviks"] { color: var(--fg); border-bottom: 2px solid var(--fg); padding-bottom: 11px; }
 html[data-tl="bolsheviks"] #tabs a[data-tl="bolsheviks"]::before { color: var(--fg); }
 @media (min-width: 760px) { html[data-tl="bolsheviks"] #charts .baked[data-tl="bolsheviks"][data-v="d"] { display: block; } }
 @media (max-width: 759.98px) { html[data-tl="bolsheviks"] #charts .baked[data-tl="bolsheviks"][data-v="m"] { display: block; } }

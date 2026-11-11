@@ -100,7 +100,7 @@ async def main():
         css.append(f'{sel} #title .baked[data-tl="{tl}"] {{ display: inline; }}')
         css.append(f'{sel} #legends .baked[data-tl="{tl}"] {{ display: flex; }}')
         css.append(f'{sel} #chapters .baked[data-tl="{tl}"] {{ display: grid; }}')
-        css.append(f'{sel} #tabs a[data-tl="{tl}"] {{ color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }}')
+        css.append(f'{sel} #tabs a[data-tl="{tl}"] {{ color: var(--fg); border-bottom: 2px solid var(--fg); padding-bottom: 11px; }}')
         css.append(f'{sel} #tabs a[data-tl="{tl}"]::before {{ color: var(--fg); }}')
         css.append(f'@media (min-width: 760px) {{ {sel} #charts .baked[data-tl="{tl}"][data-v="d"] {{ display: block; }} }}')
         css.append(f'@media (max-width: 759.98px) {{ {sel} #charts .baked[data-tl="{tl}"][data-v="m"] {{ display: block; }} }}')
