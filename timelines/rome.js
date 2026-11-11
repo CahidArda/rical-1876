@@ -26,6 +26,8 @@ const P = [
     death:"Killed fighting at Pistoria, Jan 62 BC." },
   { id:"clodius", name:"Clodius", g:"pop", c:"#15803d", bio:"Patrician who became a plebeian to be tribune. Ran street gangs and was Cicero's bitterest enemy.",
     death:"Killed in a brawl with Milo's men on the Appian Way, Jan 52 BC." },
+  { id:"opimius", name:"Opimius", g:"opt", c:"#1d4ed8", bio:"Consul of 121 BC who led the Senate's attack on Gaius Gracchus under its first emergency decree.",
+    death:"Died in exile at Dyrrachium; the year is not recorded." },
   { id:"sulla", name:"Sulla", g:"opt", c:"#2563eb", bio:"Marius's quaestor turned rival. The first Roman to march an army on Rome; dictator 82–81 BC.",
     death:"Died in retirement at Puteoli, 78 BC." },
   { id:"lucullus", name:"Lucullus", g:"opt", c:"#93c5fd", bio:"Sulla's loyal officer. Won most of the war against Mithridates, then lost the command to Pompey.",
@@ -74,8 +76,11 @@ const ROWS = [
     parties:[{ name:"Killed", m:["tgracchus"] },{ name:"His brother", m:["cgracchus"] }], dies:["tgracchus"] },
   { t:"e", date:"121 BC", title:"Gaius Gracchus killed",
     desc:"After two years as tribune, Gaius is declared a public enemy under the Senate's first emergency decree. Thousands of his supporters die with him.",
-    parties:[{ name:"Killed", m:["cgracchus"] }], dies:["cgracchus"] },
-  { t:"g", label:"121 → 107 BC" },
+    parties:[{ name:"Consul", m:["opimius"] },{ name:"Killed", m:["cgracchus"] }], dies:["cgracchus"] },
+  { t:"e", date:"109 BC", title:"Jugurtha's bribes",
+    desc:"King Jugurtha of Numidia has been buying senators for years. A special court set up by the tribune Mamilius convicts several of them, Opimius among them, and he goes into exile.",
+    parties:[{ name:"Convicted, exiled", m:["opimius"] }] },
+  { t:"d", who:"opimius", date:"after 109 BC" },
   { t:"e", date:"107 BC", title:"Marius takes command",
     desc:"Marius, the first of his family in the Senate, wins the consulship and takes over the war against King Jugurtha of Numidia. Sulla joins him as quaestor.",
     parties:[{ name:"Consul", m:["marius"] },{ name:"Quaestor", m:["sulla"] }] },
@@ -226,7 +231,7 @@ const ROWS = [
 
 
 // Wikipedia article titles (en.wikipedia.org); img/imgPage/imgR may be added by hand
-const WIKI_P = {"tgracchus": "Tiberius Gracchus", "cgracchus": "Gaius Gracchus", "marius": "Gaius Marius", "cinna": "Lucius Cornelius Cinna", "catiline": "Catiline", "clodius": "Publius Clodius Pulcher", "sulla": "Sulla", "lucullus": "Lucullus", "cato": "Cato the Younger", "cicero": "Cicero", "crassus": "Marcus Licinius Crassus", "pompey": "Pompey", "caesar": "Julius Caesar", "curio": "Gaius Scribonius Curio (tribune 50 BC)", "labienus": "Titus Labienus", "agrippa": "Marcus Vipsanius Agrippa", "julia": "Julia (daughter of Caesar)", "fulvia": "Fulvia", "octavia": "Octavia the Younger", "cassius": "Gaius Cassius Longinus", "brutus": "Marcus Junius Brutus", "antony": "Mark Antony", "lepidus": "Lepidus", "octavian": "Augustus", "sextus": "Sextus Pompey", "cleopatra": "Cleopatra"};
+const WIKI_P = {"tgracchus": "Tiberius Gracchus", "cgracchus": "Gaius Gracchus", "opimius": "Lucius Opimius", "marius": "Gaius Marius", "cinna": "Lucius Cornelius Cinna", "catiline": "Catiline", "clodius": "Publius Clodius Pulcher", "sulla": "Sulla", "lucullus": "Lucullus", "cato": "Cato the Younger", "cicero": "Cicero", "crassus": "Marcus Licinius Crassus", "pompey": "Pompey", "caesar": "Julius Caesar", "curio": "Gaius Scribonius Curio (tribune 50 BC)", "labienus": "Titus Labienus", "agrippa": "Marcus Vipsanius Agrippa", "julia": "Julia (daughter of Caesar)", "fulvia": "Fulvia", "octavia": "Octavia the Younger", "cassius": "Gaius Cassius Longinus", "brutus": "Marcus Junius Brutus", "antony": "Mark Antony", "lepidus": "Lepidus", "octavian": "Augustus", "sextus": "Sextus Pompey", "cleopatra": "Cleopatra"};
 const WIKI_E = {"Marius takes command": "Jugurthine War", "Jugurtha captured": "Jugurthine War", "Marius consul again and again": "Cimbrian War", "Social War": "Social War (91–87 BC)", "Sulla marches on Rome": "Sulla's civil war", "Marius and Cinna retake Rome": "Sulla's civil war", "Sulla returns": "Sulla's civil war", "Dictatorship and proscriptions": "Sulla's civil war", "War with Mithridates": "Third Mithridatic War", "Mutiny in the East": "Third Mithridatic War", "Spartacus": "Third Servile War", "Pompey gets the East": "Third Mithridatic War", "Catiline conspiracy": "Catilinarian conspiracy", "First Triumvirate": "First Triumvirate", "Luca renewal": "Luca Conference", "Carrhae": "Battle of Carrhae", "Rubicon": "Crossing the Rubicon", "Pharsalus": "Battle of Pharsalus", "Alexandria": "Siege of Alexandria (47 BC)", "Thapsus and Utica": "Battle of Thapsus", "Munda": "Battle of Munda", "Ides of March": "Assassination of Julius Caesar", "Philippics and Mutina": "Battle of Mutina", "Second Triumvirate": "Second Triumvirate", "Philippi": "Battle of Philippi", "Perusine War": "Perusine War", "Antony marries Octavia": "Second Triumvirate", "Pact of Misenum": "Pact of Misenum", "Naulochus": "Battle of Naulochus", "Donations of Alexandria": "Donations of Alexandria", "Actium": "Battle of Actium", "Alexandria falls": "Battle of Alexandria (30 BC)", "Augustus": "Principate", "Bona Dea scandal": "Bona Dea"};
 for (const p of P) if (WIKI_P[p.id]) p.wiki = WIKI_P[p.id];
 for (const r of ROWS) if (r.t === "e" && WIKI_E[r.title]) r.wiki = WIKI_E[r.title];
