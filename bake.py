@@ -74,6 +74,15 @@ async def main():
                 out[v][tl] = await page(pw, width, f"({RENDER})('{tl}')", fresh=False)
                 assert "crossings" not in out[v][tl]["svg"]
 
+    def chapter(i, tl):
+        def card(cls, label, j):
+            o = out["d"][ids[j]]
+            return (f'<a class="{cls}" href="#{ids[j]}"><small>{label}</small><b>{j + 1:02d} · {esc(o["tab"])}</b>'
+                    f'<em>{esc(o["title"])}</em></a>')
+        prev = card("prev", "← Previous chapter", i - 1) if i > 0 else ""
+        nxt = card("next", "Next chapter →", i + 1) if i + 1 < len(ids) else ""
+        return f'<div class="chap baked" data-tl="{tl}">{prev}{nxt}</div>'
+
     def svg_tag(v, tl):
         s = out[v][tl]["svg"]
         return s.replace("<svg ", f'<svg class="baked" data-tl="{tl}" data-v="{v}" ', 1)
@@ -82,6 +91,7 @@ async def main():
         "tabs": "".join(f'<a href="#{tl}" data-tl="{tl}">{esc(out["d"][tl]["tab"])} <span>{esc(out["d"][tl]["span"])}</span></a>' for tl in ids),
         "title": "".join(f'<span class="baked" data-tl="{tl}">{esc(out["d"][tl]["title"])}</span>' for tl in ids),
         "legends": "".join(f'<div class="legend baked" data-tl="{tl}">{out["d"][tl]["legend"]}</div>' for tl in ids),
+        "chapters": "".join(chapter(i, tl) for i, tl in enumerate(ids)),
         "charts": "".join(svg_tag(v, tl) for v in ("d", "m") for tl in ids),
     }
     css = []
@@ -89,6 +99,7 @@ async def main():
         sel = f'html[data-tl="{tl}"]' if tl != ids[0] else f':is(html[data-tl="{tl}"], html:not([data-tl]))'
         css.append(f'{sel} #title .baked[data-tl="{tl}"] {{ display: inline; }}')
         css.append(f'{sel} #legends .baked[data-tl="{tl}"] {{ display: flex; }}')
+        css.append(f'{sel} #chapters .baked[data-tl="{tl}"] {{ display: grid; }}')
         css.append(f'{sel} #tabs a[data-tl="{tl}"] {{ color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }}')
         css.append(f'{sel} #tabs a[data-tl="{tl}"]::before {{ color: var(--fg); }}')
         css.append(f'@media (min-width: 760px) {{ {sel} #charts .baked[data-tl="{tl}"][data-v="d"] {{ display: block; }} }}')
