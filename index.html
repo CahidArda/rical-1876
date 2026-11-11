@@ -23,7 +23,7 @@
   html { scrollbar-gutter: stable; }
   body { margin: 0; background: var(--bg); color: var(--fg);
     font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
-  header { max-width: 1190px; margin: 0 auto; padding: 24px 16px 4px; }
+  header { max-width: 1190px; margin: 0 auto; padding: 18px 16px 4px; }
   .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px 40px; margin: 0 0 26px; }
   .top .tabs { flex: 1; }
   @media (max-width: 759.98px) {
@@ -40,6 +40,12 @@
   .links a:hover, footer a:hover { color: var(--fg); }
   .note { color: var(--muted); font-size: 12px; margin: -10px 0 18px; opacity: .85; }
   footer p { margin: 0 0 6px; }
+  .mast { display: flex; justify-content: space-between; align-items: center; padding: 0 0 12px; margin: 0 0 22px; border-bottom: 1px solid var(--grid); }
+  .brand { font-size: 15px; font-weight: 750; letter-spacing: -0.01em; color: var(--fg); padding-bottom: 2px; border-bottom: 2px solid #dc2626; }
+  .hlinks { display: flex; gap: 18px; font-size: 13px; }
+  .hlinks a { color: var(--muted); text-decoration: none; transition: color .15s; }
+  .hlinks a:hover { color: var(--fg); }
+  .hlinks i { font-style: normal; opacity: .6; }
   /* previous / next chapter cards at the bottom */
   .chapters { max-width: 1190px; margin: 0 auto 30px; padding: 0 16px; }
   .chap { grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -171,6 +177,10 @@ html[data-tl="bolsheviks"] #tabs a[data-tl="bolsheviks"]::before { color: var(--
 </head>
 <body>
 <header>
+  <div class="mast">
+    <span class="brand">Rical</span>
+    <nav class="hlinks"><a href="https://cahidarda.com/articles/rical-1876">Blog post <i>↗</i></a><a href="https://github.com/CahidArda/rical-1876">GitHub <i>↗</i></a><a href="https://x.com/cahidarda">@cahidarda <i>↗</i></a></nav>
+  </div>
   <div class="top">
     <nav class="tabs" id="tabs"><!--BAKE:tabs--><a href="#rome" data-tl="rome">Roman Republic <span>133–27 BC</span></a><a href="#america" data-tl="america">American Revolution <span>1765–1836</span></a><a href="#france" data-tl="france">French Revolution <span>1789–1850</span></a><a href="#ottoman" data-tl="ottoman">Ottoman Empire <span>1865–1964</span></a><a href="#bolsheviks" data-tl="bolsheviks">Bolsheviks <span>1903–1953</span></a><!--/BAKE--></nav>
     <script>{ const r = document.getElementById("tabs"), a = r.querySelector(`a[data-tl="${document.documentElement.dataset.tl}"]`);
