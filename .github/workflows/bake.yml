@@ -1,0 +1,50 @@
+# Re-runs bake.py whenever the timelines or the renderer change, and commits the regenerated
+# layout cache and pre-drawn markup back to main. Pushes made with GITHUB_TOKEN don't trigger
+# workflows, so the bot's commit doesn't loop.
+name: Bake
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "timelines/**"
+      - "bake.py"
+      - ".github/workflows/bake.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bake
+  cancel-in-progress: true
+
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Bake
+        run: python bake.py
+
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet; then
+            echo "Already baked."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Bake layouts and pre-drawn markup"
+          git push

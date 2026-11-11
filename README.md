@@ -33,7 +33,9 @@ pip install playwright && playwright install chromium
 python3 bake.py
 ```
 
-If you forget, nothing breaks: the cache entry carries a signature of the data, and on a
+A GitHub Action (`.github/workflows/bake.yml`) does this on every push to `main` that touches
+the timelines, `index.html` or `bake.py`, and commits the result if anything changed. If you
+forget and the Action hasn't run yet, nothing breaks: the cache entry carries a signature of the data, and on a
 mismatch the page solves the layout in the browser; the live copy replaces the stale
 pre-drawn one as soon as the script runs. `bake.py` also warns if a
 timeline gets wider than the shared desktop width (`MIN_W`, 1150px), which keeps tabs from
