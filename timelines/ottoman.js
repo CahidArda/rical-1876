@@ -78,7 +78,7 @@ const P = [
     death:"Died in exile in Sanremo, Italy, on 16 May 1926." },
   { id:"ferid", name:"Damat Ferid Paşa", g:"opp", c:"#1e40af", bio:"Sultan's son-in-law and leader of the revived İtilâf; Grand Vizier several times in 1919–20.",
     death:"Died in exile in Nice on 6 Oct 1923." },
-  { id:"kemal", name:"Mustafa Kemal", g:"nat", c:"#0d9488", bio:"Action Army staff officer, Libya volunteer, Gallipoli commander, then leader of the national movement and president.",
+  { id:"kemal", name:"Mustafa Kemal Atatürk", g:"nat", c:"#0d9488", bio:"Action Army staff officer, Libya volunteer, Gallipoli commander, then leader of the national movement and president.",
     death:"Died at Dolmabahçe Palace on 10 Nov 1938." },
   { id:"fethi", name:"Fethi Okyar", g:"nat", c:"#5eead4", bio:"Kemal's friend from Libya and Sofia; Prime Minister 1924–25; led the short-lived 'loyal opposition' party in 1930.",
     death:"Died in Istanbul on 7 May 1943." },
