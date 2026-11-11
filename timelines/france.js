@@ -170,9 +170,21 @@ const ROWS = [
   { t:"e", date:"1804", title:"Emperor",
     desc:"Napoleon is proclaimed Emperor in May, names his first marshals, Murat, Bernadotte and Ney among them, and is crowned with Joséphine in December. Talleyrand stays Foreign Minister and Fouché returns as Police Minister.",
     parties:[{ name:"Emperor & Empress", m:["napoleon","josephine"] },{ name:"Marshals", m:["murat","bernadotte","ney"] },{ name:"Ministers", m:["talleyrand","fouche"] }] },
+  { t:"e", date:"Dec 1805", title:"Austerlitz",
+    desc:"Napoleon defeats the Austrian and Russian armies at Austerlitz. Austria makes peace at Pressburg weeks later.",
+    parties:[{ name:"Emperor", m:["napoleon"] },{ name:"Marshals", m:["murat","bernadotte"] }] },
+  { t:"e", date:"Oct 1806", title:"Jena",
+    desc:"Prussia goes to war and loses its army in a single day at Jena and Auerstedt. The French enter Berlin.",
+    parties:[{ name:"Emperor", m:["napoleon"] },{ name:"Marshals", m:["murat","ney"] }] },
+  { t:"e", date:"Jul 1807", title:"Tilsit",
+    desc:"Napoleon and Tsar Alexander meet on a raft on the Niemen and make peace. Talleyrand negotiates the treaties, then leaves the Foreign Ministry weeks later.",
+    parties:[{ name:"Emperor", m:["napoleon"] },{ name:"Negotiator", m:["talleyrand"] }] },
   { t:"e", date:"Jan 1809", title:"Silk stocking",
     desc:"Having secretly advised the Tsar against Napoleon at Erfurt, Talleyrand is seen making peace with his old rival Fouché. Napoleon rages at Talleyrand in front of the court, but keeps both men.",
     parties:[{ name:"Emperor", m:["napoleon"] },{ name:"Suspected", m:["talleyrand","fouche"] }] },
+  { t:"e", date:"Jul 1809", title:"Wagram",
+    desc:"Napoleon defeats Austria at Wagram. Bernadotte, whose Saxon corps fared badly, is sent home after the battle.",
+    parties:[{ name:"Emperor", m:["napoleon"] },{ name:"Sent home", m:["bernadotte"] }] },
   { t:"e", date:"Dec 1809", title:"Divorce",
     desc:"Needing an heir, Napoleon divorces Joséphine. She keeps the title of Empress and Malmaison.",
     parties:[{ name:"Emperor", m:["napoleon"] },{ name:"Divorced", m:["josephine"] }] },
@@ -223,7 +235,7 @@ const ROWS = [
 
 // Wikipedia article titles (en.wikipedia.org); img/imgCredit may be added by hand
 const WIKI_P = {"louis": "Louis XVI", "marie": "Marie Antoinette", "louis18": "Louis XVIII", "egalite": "Louis Philippe II, Duke of Orléans", "lphilippe": "Louis Philippe I", "necker": "Jacques Necker", "bailly": "Jean Sylvain Bailly", "mirabeau": "Honoré Gabriel Riqueti, comte de Mirabeau", "lafayette": "Marquis de Lafayette", "dumouriez": "Charles François Dumouriez", "brissot": "Jacques Pierre Brissot", "marat": "Jean-Paul Marat", "danton": "Georges Danton", "desmoulins": "Camille Desmoulins", "hebert": "Jacques Hébert", "robespierre": "Maximilien Robespierre", "saintjust": "Louis Antoine de Saint-Just", "carnot": "Lazare Carnot", "tallien": "Jean-Lambert Tallien", "sieyes": "Emmanuel Joseph Sieyès", "fouche": "Joseph Fouché", "talleyrand": "Charles Maurice de Talleyrand-Périgord", "barras": "Paul Barras", "josephine": "Joséphine de Beauharnais", "murat": "Joachim Murat", "ney": "Michel Ney", "bernadotte": "Charles XIV John", "moreau": "Jean Victor Marie Moreau", "cadoudal": "Georges Cadoudal", "napoleon": "Napoleon"};
-const WIKI_E = {"The National Assembly": "Tennis Court Oath", "The Bastille": "Storming of the Bastille", "Fête de la Fédération": "Fête de la Fédération", "Flight to Varennes": "Flight to Varennes", "Champ de Mars": "Champ de Mars massacre", "War": "War of the First Coalition", "The monarchy falls": "Insurrection of 10 August 1792", "September Massacres": "September Massacres", "Valmy": "Battle of Valmy", "The king's trial": "Execution of Louis XVI", "Girondins purged": "Insurrection of 31 May – 2 June 1793", "The Committee": "Committee of Public Safety", "Lyon": "Siege of Lyon", "Toulon": "Siege of Toulon (1793)", "Hébertists executed": "Hébertists", "Dantonists executed": "Georges Danton", "9 Thermidor": "Thermidorian Reaction", "13 Vendémiaire": "13 Vendémiaire", "Italy": "Italian campaign of 1796–1797", "18 Fructidor": "Coup of 18 Fructidor", "18 Brumaire": "Coup of 18 Brumaire", "The Consulate": "French Consulate", "Rue Saint-Nicaise": "Plot of the rue Saint-Nicaise", "Duc d'Enghien": "Louis Antoine, Duke of Enghien", "Emperor": "Coronation of Napoleon", "Dresden and Leipzig": "Battle of Leipzig", "First abdication": "Treaty of Fontainebleau (1814)", "Hundred Days": "Hundred Days", "Second Restoration": "Bourbon Restoration in France", "July Revolution": "July Revolution", "Marat killed": "Jean-Paul Marat", "Cadoudal conspiracy": "Georges Cadoudal", "Bernadotte to Sweden": "Charles XIV John"};
+const WIKI_E = {"Austerlitz": "Battle of Austerlitz", "Jena": "Battle of Jena–Auerstedt", "Tilsit": "Treaties of Tilsit", "Wagram": "Battle of Wagram", "The National Assembly": "Tennis Court Oath", "The Bastille": "Storming of the Bastille", "Fête de la Fédération": "Fête de la Fédération", "Flight to Varennes": "Flight to Varennes", "Champ de Mars": "Champ de Mars massacre", "War": "War of the First Coalition", "The monarchy falls": "Insurrection of 10 August 1792", "September Massacres": "September Massacres", "Valmy": "Battle of Valmy", "The king's trial": "Execution of Louis XVI", "Girondins purged": "Insurrection of 31 May – 2 June 1793", "The Committee": "Committee of Public Safety", "Lyon": "Siege of Lyon", "Toulon": "Siege of Toulon (1793)", "Hébertists executed": "Hébertists", "Dantonists executed": "Georges Danton", "9 Thermidor": "Thermidorian Reaction", "13 Vendémiaire": "13 Vendémiaire", "Italy": "Italian campaign of 1796–1797", "18 Fructidor": "Coup of 18 Fructidor", "18 Brumaire": "Coup of 18 Brumaire", "The Consulate": "French Consulate", "Rue Saint-Nicaise": "Plot of the rue Saint-Nicaise", "Duc d'Enghien": "Louis Antoine, Duke of Enghien", "Emperor": "Coronation of Napoleon", "Dresden and Leipzig": "Battle of Leipzig", "First abdication": "Treaty of Fontainebleau (1814)", "Hundred Days": "Hundred Days", "Second Restoration": "Bourbon Restoration in France", "July Revolution": "July Revolution", "Marat killed": "Jean-Paul Marat", "Cadoudal conspiracy": "Georges Cadoudal", "Bernadotte to Sweden": "Charles XIV John"};
 for (const p of P) if (WIKI_P[p.id]) p.wiki = WIKI_P[p.id];
 for (const r of ROWS) if (r.t === "e" && WIKI_E[r.title]) r.wiki = WIKI_E[r.title];
 
@@ -237,10 +249,28 @@ const usedImg = new Set();
 for (const p of P) if (IMG_FILES[p.wiki]) { Object.assign(p, commons(IMG_FILES[p.wiki])); usedImg.add(IMG_FILES[p.wiki]); }
 for (const r of ROWS) if (r.t === "e" && IMG_FILES[r.wiki] && !usedImg.has(IMG_FILES[r.wiki])) { Object.assign(r, commons(IMG_FILES[r.wiki])); usedImg.add(IMG_FILES[r.wiki]); }
 
+// Coalitions against France, shaded from the event they formed around to the one that ended them
+const SPANS = [
+  { from:"War", to:"18 Fructidor", label:"1st Coalition", date:"1792–1797",
+    desc:"Austria and Prussia, joined in 1793 by Britain, Spain, the Dutch Republic, Sardinia and others. Prussia and Spain made peace in 1795, Austria at Campo Formio in October 1797, leaving Britain alone." },
+  { from:"18 Brumaire", to:"Rue Saint-Nicaise", label:"2nd Coalition", date:"1798–1802",
+    desc:"Britain, Austria, Russia, the Ottoman Empire, Naples and Portugal. Russia left in 1799. After Marengo and Hohenlinden, Austria made peace at Lunéville in 1801 and Britain at Amiens in 1802." },
+  { from:"Austerlitz", to:"Austerlitz", label:"3rd Coalition", date:"1805",
+    desc:"Britain, Austria, Russia, Sweden and Naples. Ended by Austerlitz and the Peace of Pressburg in December 1805." },
+  { from:"Jena", to:"Tilsit", label:"4th Coalition", date:"1806–1807",
+    desc:"Prussia, Russia, Saxony, Sweden and Britain. Prussia was beaten at Jena and Auerstedt; the war ended with the treaties of Tilsit in July 1807." },
+  { from:"Wagram", to:"Wagram", label:"5th Coalition", date:"1809",
+    desc:"Austria and Britain. Ended by Wagram and the Treaty of Schönbrunn in October 1809." },
+  { from:"Dresden and Leipzig", to:"First abdication", label:"6th Coalition", date:"1813–1814",
+    desc:"Russia, Prussia, Britain, Sweden, Austria, Spain, Portugal and several German states. Ended with Napoleon's abdication in April 1814." },
+  { from:"Hundred Days", to:"Second Restoration", label:"7th Coalition", date:"1815",
+    desc:"Britain, Prussia, Austria, Russia, Sweden, the Netherlands and others. Ended with Waterloo and the second Treaty of Paris in November 1815." },
+];
+
 window.TIMELINES.france = {
   tab: "French Revolution",
   span: "1789–1850",
   title: "Guillotines and turncoats, 1789–1850",
-  GROUPS, GROUP_COLOR, P, ROWS,
+  GROUPS, GROUP_COLOR, P, ROWS, SPANS,
 };
 })();

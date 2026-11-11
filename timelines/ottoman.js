@@ -275,7 +275,6 @@ const commons = f => ({ imgR: (window.IMG_RATIO || {})[f] || 0.8, img: "https://
   imgPage: "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(f.replace(/ /g, "_")) });
 for (const p of P) if (IMG_FILES[p.wiki]) Object.assign(p, commons(IMG_FILES[p.wiki]));
 for (const r of ROWS) if (r.t === "e" && IMG_FILES[r.wiki]) Object.assign(r, commons(IMG_FILES[r.wiki]));
-for (const r of ROWS) if (r.t === "e" && r.title === "Constitution restored") Object.assign(r, commons("Greek lithograph celebrating the Ottoman Constitution.png"));
 
 window.TIMELINES.ottoman = {
   tab: "Ottoman Empire",
