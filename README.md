@@ -40,7 +40,7 @@ the timelines, `index.html` or `bake.py`, and commits the result if anything cha
 forget and the Action hasn't run yet, nothing breaks: the cache entry carries a signature of the data, and on a
 mismatch the page solves the layout in the browser; the live copy replaces the stale
 pre-drawn one as soon as the script runs. `bake.py` also warns if a
-timeline gets wider than the shared desktop width (`MIN_W`, 1180px), which keeps tabs from
+timeline gets wider than the shared desktop width (`MIN_W`, 1190px), which keeps tabs from
 shifting when you switch.
 
 The layout is a storyline visualization, in the spirit of Tanahashi & Ma (2012) and
@@ -87,7 +87,7 @@ the lines pass straight through it.
 
 A timeline can also export `SPANS`: periods drawn as a faint band from one event (`from`, by
 title) to another (`to`), with a bracket and labels at its start and end on the right edge, and a tooltip (`label`, `result`,
-`date`, `desc`). The French timeline uses them for the seven coalitions.
+`date`, `desc`, optional `lane`). Overlapping periods get their own lane. Every timeline uses them: wars and constitutional eras for the Ottomans, civil wars for Rome, regimes and the seven coalitions for France, the war and the presidencies for America, and the war, NEP and trial years for the Bolsheviks.
 
 ## Deployment
 

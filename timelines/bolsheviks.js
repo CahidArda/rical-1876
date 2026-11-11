@@ -209,10 +209,18 @@ const usedImg = new Set();
 for (const p of P) if (IMG_FILES[p.wiki]) { Object.assign(p, commons(IMG_FILES[p.wiki])); usedImg.add(IMG_FILES[p.wiki]); }
 for (const r of ROWS) if ((r.t === "e" || r.t === "m") && IMG_FILES[r.wiki] && !usedImg.has(IMG_FILES[r.wiki])) { Object.assign(r, commons(IMG_FILES[r.wiki])); usedImg.add(IMG_FILES[r.wiki]); }
 
+// Periods, shaded from the event they start at to the one they end at
+const SPANS = [
+  { from:"Zimmerwald", to:"Brest-Litovsk", label:"First World War", date:"1914–1918", desc:"Russia fought Germany and Austria-Hungary from 1914 until the Treaty of Brest-Litovsk in March 1918." },
+  { from:"Yekaterinburg", to:"Kronstadt and NEP", label:"Civil War", result:"Bolshevik victory", date:"1917–1922", desc:"The Red Army against the White armies and other opponents, with foreign intervention, across the former empire." },
+  { from:"Kronstadt and NEP", to:"United Opposition expelled", label:"NEP years", date:"1921–1928", desc:"The New Economic Policy allowed small private trade and farming, until the turn to planned industrialisation and collectivisation." },
+  { from:"First Moscow trial", to:"Third Moscow trial", label:"Moscow trials", date:"1936–1938", desc:"Three public trials of former party leaders, in August 1936, January 1937 and March 1938." },
+];
+
 window.TIMELINES.bolsheviks = {
   tab: "Bolsheviks",
   span: "1903–1953",
   title: "Comrades, factions and trials, 1903–1953",
-  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC,
+  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC, SPANS,
 };
 })();

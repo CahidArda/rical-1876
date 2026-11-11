@@ -287,10 +287,19 @@ const commons = f => ({ imgR: (window.IMG_RATIO || {})[f] || 0.8, img: "https://
 for (const p of P) if (IMG_FILES[p.wiki]) Object.assign(p, commons(IMG_FILES[p.wiki]));
 for (const r of ROWS) if (r.t === "e" && IMG_FILES[r.wiki]) Object.assign(r, commons(IMG_FILES[r.wiki]));
 
+// Periods, shaded from the event they start at to the one they end at
+const SPANS = [
+  { from:"Constitution proclaimed", to:"Midhat exiled", label:"1st Constitutional Era", date:"1876–1878", desc:"The first Ottoman constitution and parliament. Abdülhamid II suspended the parliament in February 1878; it stayed closed for thirty years.", lane:0 },
+  { from:"Off to Libya", to:"Saviour Officers", label:"Italo-Turkish War", result:"Italian victory; Libya and the Dodecanese passed to Italy", date:"1911–1912", desc:"Italy invaded the Ottoman provinces in Libya. The war ended with the Treaty of Ouchy in October 1912, as the Balkan War began.", lane:0 },
+  { from:"First Balkan War", to:"Edirne retaken", label:"Balkan Wars", result:"Most of Rumelia lost; Edirne regained", date:"1912–1913", desc:"In the first war Bulgaria, Serbia, Greece and Montenegro took almost all the Ottoman lands in Europe. In the second they fought each other over the spoils, and the Ottomans took Edirne back.", lane:0 },
+  { from:"Into the World War", to:"Mudros armistice", label:"First World War", result:"Defeat of the Central Powers", date:"1914–1918", desc:"The Ottoman Empire fought alongside Germany and Austria-Hungary on several fronts, from Gallipoli and the Caucasus to Mesopotamia and Palestine, until the Armistice of Mudros.", lane:0 },
+  { from:"Sent to Samsun", to:"Sakarya vs Batum", label:"War of Independence", result:"Victory of the national movement", date:"1919–1922", desc:"The national movement organised from Anatolia, fighting until the Armistice of Mudanya in October 1922; the Treaty of Lausanne followed in 1923.", lane:0 },
+];
+
 window.TIMELINES.ottoman = {
   tab: "Ottoman Empire",
   span: "1865–1964",
   title: "Pashas, plots and gallows, 1865–1964",
-  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC,
+  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC, SPANS,
 };
 })();

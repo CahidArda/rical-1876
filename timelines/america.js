@@ -221,10 +221,20 @@ const usedImg = new Set();
 for (const p of P) if (IMG_FILES[p.wiki]) { Object.assign(p, commons(IMG_FILES[p.wiki])); usedImg.add(IMG_FILES[p.wiki]); }
 for (const r of ROWS) if ((r.t === "e" || r.t === "m") && IMG_FILES[r.wiki] && !usedImg.has(IMG_FILES[r.wiki])) { Object.assign(r, commons(IMG_FILES[r.wiki])); usedImg.add(IMG_FILES[r.wiki]); }
 
+// Periods, shaded from the event they start at to the one they end at
+const SPANS = [
+  { from:"Lexington and Concord", to:"Treaty of Paris", label:"Revolutionary War", result:"American independence", date:"1775–1783", desc:"The thirteen colonies, joined by France from 1778, against Britain." },
+  { from:"First government", to:"Jay Treaty", label:"Washington", date:"1789–1797", desc:"George Washington's two terms as the first President." },
+  { from:"Washington steps down", to:"Election of 1800", label:"Adams", date:"1797–1801", desc:"John Adams's single term as President." },
+  { from:"Louisiana Purchase", to:"Burr's treason trial", label:"Jefferson", date:"1801–1809", desc:"Thomas Jefferson's two terms as President." },
+  { from:"Old friends", to:"War of 1812", label:"Madison", date:"1809–1817", desc:"James Madison's two terms as President." },
+  { from:"Era of Good Feelings", to:"Lafayette's farewell tour", label:"Monroe", date:"1817–1825", desc:"James Monroe's two terms as President." },
+];
+
 window.TIMELINES.america = {
   tab: "American Revolution",
   span: "1765–1836",
   title: "Founders, feuds and a duel, 1765–1836",
-  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC,
+  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC, SPANS,
 };
 })();

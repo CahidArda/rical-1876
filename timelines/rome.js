@@ -258,10 +258,20 @@ const usedImg = new Set();
 for (const p of P) if (IMG_FILES[p.wiki]) { Object.assign(p, commons(IMG_FILES[p.wiki])); usedImg.add(IMG_FILES[p.wiki]); }
 for (const r of ROWS) if (r.t === "e" && IMG_FILES[r.wiki] && !usedImg.has(IMG_FILES[r.wiki])) { Object.assign(r, commons(IMG_FILES[r.wiki])); usedImg.add(IMG_FILES[r.wiki]); }
 
+// Periods, shaded from the event they start at to the one they end at
+const SPANS = [
+  { from:"Social War", to:"Social War", label:"Social War", result:"Roman victory; citizenship granted to the Italians", date:"91–88 BC", desc:"Rome's Italian allies rose up for Roman citizenship." },
+  { from:"Sulla returns", to:"Dictatorship and proscriptions", label:"Sulla's civil war", result:"Sulla's victory", date:"83–81 BC", desc:"Sulla came back from the East and fought his way into Rome, then ruled as dictator." },
+  { from:"Rubicon", to:"Munda", label:"Caesar's civil war", result:"Caesar's victory", date:"49–45 BC", desc:"Caesar against Pompey and the Senate, fought from Spain to Greece, Egypt and Africa." },
+  { from:"Philippics and Mutina", to:"Philippi", label:"Liberators' war", result:"Victory of the triumvirs", date:"43–42 BC", desc:"The war between Caesar's heirs and his assassins, ending at Philippi." },
+  { from:"Second Triumvirate", to:"Donations of Alexandria", label:"Second Triumvirate", date:"43–33 BC", desc:"Octavian, Antony and Lepidus, given legal powers to rule Rome for five years, renewed in 37 BC." },
+  { from:"Antony's will", to:"Alexandria falls", label:"War of Actium", result:"Octavian's victory", date:"32–30 BC", desc:"Octavian against Antony and Cleopatra, decided at sea off Actium." },
+];
+
 window.TIMELINES.rome = {
   tab: "Roman Republic",
   span: "133–27 BC",
   title: "Generals, triumvirs and daggers, 133–27 BC",
-  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC,
+  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC, SPANS,
 };
 })();
