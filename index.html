@@ -74,9 +74,9 @@
   <nav class="tabs" id="tabs"></nav>
   <h1 id="title"></h1>
   <p class="sub">Each line is a person, time flows down, and lines meet in a box when people share an event. Tap or hover a line, a box or a ✕ for details.<br>Prepared with AI (Claude); names, dates and descriptions may contain mistakes.</p>
-  <div class="legend" id="legend"></div>
+  <div id="legends"></div>
 </header>
-<div class="wrap"><svg id="chart" xmlns="http://www.w3.org/2000/svg"></svg></div>
+<div class="wrap" id="charts"></div>
 <footer>Simplified for readability. Rows are spaced evenly, not to scale; shaded bands mark long jumps in time. Some dates are approximate.</footer>
 <div id="tip"></div>
 
@@ -85,22 +85,23 @@
 <script src="timelines/france.js"></script>
 <script>
 const TL_ORDER = ["ottoman", "rome", "france"];
-const TL_ID = TL_ORDER.includes(location.hash.slice(1)) ? location.hash.slice(1) : "ottoman";
-const TL = window.TIMELINES[TL_ID];
-const { GROUPS, GROUP_COLOR, P, ROWS } = TL;
-document.title = TL.title + " · Rical";
-document.getElementById("title").textContent = TL.title;
+const IS_MOBILE = window.innerWidth < 760;
+const MIN_W = IS_MOBILE ? 0 : 1000;   // shared chart width on desktop, so switching tabs doesn't shift the page
+const SVGNS = "http://www.w3.org/2000/svg";
+const tabLinks = {};
 {
   const tabs = document.getElementById("tabs");
   for (const id of TL_ORDER) {
     const t = window.TIMELINES[id]; if (!t) continue;
     const a = document.createElement("a");
-    a.href = "#" + id; a.className = id === TL_ID ? "on" : "";
+    a.href = "#" + id;
     a.innerHTML = `${t.tab} <span>${t.span}</span>`;
-    tabs.appendChild(a);
+    tabs.appendChild(a); tabLinks[id] = a;
   }
 }
-addEventListener("hashchange", () => location.reload());
+
+function build(TL_ID, svg, lg, minW) {
+const { GROUPS, GROUP_COLOR, P, ROWS } = window.TIMELINES[TL_ID];
 
 // ---------- layout ----------
 const MOBILE = window.innerWidth < 760;
@@ -246,9 +247,11 @@ for (let it = 0; it < 600; it++) {
 // shift so the leftmost edge sits at LEFT
 let minX = Infinity, maxX = -Infinity;
 for (const l of LAY) for (const u of l.units) { minX = Math.min(minX, u.c - u.w / 2); maxX = Math.max(maxX, u.c + u.w / 2); }
-const SHIFT = LEFT + 14 - minX;
+let SHIFT = LEFT + 14 - minX;
+const W0 = maxX + SHIFT + RIGHT;
+const W = Math.max(W0, minW);
+SHIFT += (W - W0) / 2;
 for (const l of LAY) { for (const u of l.units) u.c += SHIFT; for (const id in l.x) l.x[id] += SHIFT; }
-const W = maxX + SHIFT + RIGHT;
 
 // hand the result to the renderer
 for (const l of LAY) {
@@ -290,11 +293,9 @@ console.log("crossings", bestC);
 
 // ---------- render ----------
 const NS = "http://www.w3.org/2000/svg";
-const svg = document.getElementById("chart");
 svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
 svg.setAttribute("width", W); svg.setAttribute("height", H);
 if (MOBILE) { svg.removeAttribute("width"); svg.removeAttribute("height"); svg.style.width = "100%"; svg.style.height = "auto"; }
-else for (const el of document.querySelectorAll("header, footer")) el.style.maxWidth = W + "px";
 const el = (tag, attrs = {}, parent = svg) => {
   const n = document.createElementNS(NS, tag);
   for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
@@ -303,7 +304,6 @@ const el = (tag, attrs = {}, parent = svg) => {
 const text = (str, attrs, parent) => { const t = el("text", attrs, parent); t.textContent = str; return t; };
 
 // legend
-const lg = document.getElementById("legend");
 for (const [g, label] of Object.entries(GROUPS)) {
   const s = document.createElement("span");
   s.innerHTML = `<i style="background:${GROUP_COLOR[g]}"></i>${label}`;
@@ -408,6 +408,35 @@ for (const p of P) {
   text("✕", { x, y: y + 5, "text-anchor": "middle", fill: p.c }, g);
   bind(g, () => `<b style="color:${p.c}">✕ ${p.name}</b><div style="margin-top:4px">${p.death}</div>`, p.id);
 }
+return W;
+}
+
+const built = {};
+function ensure(id) {
+  if (built[id]) return built[id];
+  const svg = document.createElementNS(SVGNS, "svg");
+  svg.style.display = "none";
+  document.getElementById("charts").appendChild(svg);
+  const lg = document.createElement("div");
+  lg.className = "legend"; lg.style.display = "none";
+  document.getElementById("legends").appendChild(lg);
+  const W = build(id, svg, lg, MIN_W);
+  return (built[id] = { svg, lg, W });
+}
+function showTimeline() {
+  const id = TL_ORDER.includes(location.hash.slice(1)) ? location.hash.slice(1) : "ottoman";
+  const cur = ensure(id), t = window.TIMELINES[id];
+  for (const [k, b] of Object.entries(built)) { b.svg.style.display = k === id ? "" : "none"; b.lg.style.display = k === id ? "" : "none"; }
+  for (const [k, a] of Object.entries(tabLinks)) a.className = k === id ? "on" : "";
+  document.getElementById("title").textContent = t.title;
+  document.title = t.title + " · Rical";
+  if (!IS_MOBILE) for (const el of document.querySelectorAll("header, footer")) el.style.maxWidth = cur.W + "px";
+}
+addEventListener("hashchange", showTimeline);
+showTimeline();
+// lay out the other timelines in the background so switching is instant
+const idle = window.requestIdleCallback || (f => setTimeout(f, 30));
+for (const id of TL_ORDER) idle(() => ensure(id));
 </script>
 
 </body>
