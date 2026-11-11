@@ -87,7 +87,7 @@ the lines pass straight through it.
 
 A timeline can also export `SPANS`: periods drawn as a faint band from one event (`from`, by
 title) to another (`to`), with a bracket and labels at its start and end on the right edge, and a tooltip (`label`, `result`,
-`date`, `desc`, optional `lane`). Overlapping periods get their own lane. Every timeline uses them: wars and constitutional eras for the Ottomans, civil wars for Rome, regimes and the seven coalitions for France, the war and the presidencies for America, and the war, NEP and trial years for the Bolsheviks.
+`date`, `desc`). Overlapping periods nest like brackets: the one that starts first hugs the right edge, later ones sit one lane in. Every timeline uses them: wars and constitutional eras for the Ottomans, civil wars for Rome, regimes and the seven coalitions for France, the war and the presidencies for America, and the war, NEP and trial years for the Bolsheviks.
 
 ## Deployment
 
