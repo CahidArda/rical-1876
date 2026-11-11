@@ -10,6 +10,17 @@ const GROUPS = {
   cup:     "Unionists (CUP)",
   nat:     "Unionists → National movement",
 };
+// shown when hovering a group in the legend
+const GROUP_DESC = {
+  "yo": "Writers and officials of the 1860s and 1870s who called for a constitution and a parliament within the Ottoman order.",
+  "palace": "The sultans, their court and their household.",
+  "m1876": "Senior statesmen of the Tanzimat reform era (1839–1876), who led the government around the first constitution of 1876.",
+  "react": "Opponents of the post-1908 order who rallied support on religious grounds, around the 31 March incident of 1909.",
+  "opp": "The liberal opposition to the Committee of Union and Progress after 1908, organised from 1911 as the Freedom and Accord Party (Hürriyet ve İtilâf).",
+  "army": "The army command, which held the balance between the factions at key moments.",
+  "cup": "The Committee of Union and Progress (İttihat ve Terakki): the society behind the 1908 revolution and the governing party from 1913 to 1918.",
+  "nat": "Officers and politicians who came out of the Unionist movement and went on to lead the National Movement and the early Republic."
+};
 const GROUP_COLOR = { yo:"#ca8a04", palace:"#8b5cf6", m1876:"#78716c", react:"#16a34a", opp:"#2563eb", army:"#b45309", cup:"#dc2626", nat:"#0d9488" };
 
 const P = [
@@ -280,6 +291,6 @@ window.TIMELINES.ottoman = {
   tab: "Ottoman Empire",
   span: "1865–1964",
   title: "Pashas, plots and gallows, 1865–1964",
-  GROUPS, GROUP_COLOR, P, ROWS,
+  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC,
 };
 })();

@@ -10,6 +10,17 @@ const GROUPS = {
   bonap:  "Napoleon and his marshals",
   opp:    "Napoleon's enemies",
 };
+// shown when hovering a group in the legend
+const GROUP_DESC = {
+  "court": "Louis XVI, Marie Antoinette and the Bourbon line that returned in 1814.",
+  "orl": "The junior branch of the royal family. Philippe Égalité sided with the Revolution; his son Louis-Philippe became King of the French in 1830.",
+  "const": "Moderates of 1789–1791 who wanted a king bound by a constitution, on the British model.",
+  "gir": "A loose group of deputies, several from the Gironde around Bordeaux, who pushed for war in 1792 and were expelled from the Convention in June 1793.",
+  "jac": "The radical deputies of the Jacobin Club, who sat on the high benches of the Convention ('the Mountain') and ran the Committee of Public Safety in 1793–1794.",
+  "therm": "Those who brought down Robespierre on 9 Thermidor (July 1794) and ran the Directory that followed, plus the great survivors of every regime.",
+  "bonap": "Napoleon, Joséphine, and the generals he made Marshals of the Empire.",
+  "opp": "Royalist plotters and republican generals who turned against Napoleon."
+};
 const GROUP_COLOR = { court:"#8b5cf6", const:"#2563eb", gir:"#ca8a04", jac:"#dc2626", therm:"#0d9488", bonap:"#78716c", orl:"#db2777", opp:"#65a30d" };
 
 const P = [
@@ -271,6 +282,6 @@ window.TIMELINES.france = {
   tab: "French Revolution",
   span: "1789–1850",
   title: "Guillotines and turncoats, 1789–1850",
-  GROUPS, GROUP_COLOR, P, ROWS, SPANS,
+  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC, SPANS,
 };
 })();

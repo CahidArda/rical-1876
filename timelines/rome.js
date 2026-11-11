@@ -11,6 +11,18 @@ const GROUPS = {
   pomp:  "Pompey's heirs",
   egypt: "Egypt",
 };
+// shown when hovering a group in the legend
+const GROUP_DESC = {
+  "pop": "Populares: politicians who worked through the tribunes and the popular assemblies rather than the Senate. Marius was their great general.",
+  "opt": "Optimates: defenders of the Senate's authority. Sulla was their great general.",
+  "tri": "Caesar, Pompey and Crassus, whose informal alliance from 60 BC pooled their money, armies and votes.",
+  "lib": "The senators who killed Caesar on 15 March 44 BC and called themselves the Liberators.",
+  "off": "Men who served under Caesar in Gaul and the civil war, and Agrippa, right-hand man to Caesar's heir Octavian.",
+  "fam": "Women of the leading families, whose marriages sealed political alliances.",
+  "caes": "Those who took up Caesar's cause after his death, led by Octavian and Antony.",
+  "pomp": "Pompey's son, who kept up the fight after his father's death.",
+  "egypt": "The Ptolemaic court of Egypt."
+};
 const GROUP_COLOR = { pop:"#16a34a", opt:"#2563eb", tri:"#dc2626", lib:"#78716c", caes:"#8b5cf6", pomp:"#0891b2", egypt:"#ca8a04", off:"#ea580c", fam:"#db2777" };
 
 const P = [
@@ -250,6 +262,6 @@ window.TIMELINES.rome = {
   tab: "Roman Republic",
   span: "133–27 BC",
   title: "Generals, triumvirs and daggers, 133–27 BC",
-  GROUPS, GROUP_COLOR, P, ROWS,
+  GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC,
 };
 })();
