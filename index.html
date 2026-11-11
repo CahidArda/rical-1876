@@ -420,7 +420,7 @@ for (const sp of SPANS) {
     for (let i = 1; i < n; i++) lbl(y0 + (h * i) / n, "middle");
   }
   el("rect", { x: tx - 8, y: y0, width: W - tx + 8, height: h, fill: "transparent" }, g);
-  bind(g, () => `<b>${sp.label}</b><div class="m">${sp.date}</div>${sp.result ? `<div style="margin-top:4px"><b style="font-size:13px">${sp.result}</b></div>` : ""}<div style="margin-top:4px">${sp.desc}</div>`);
+  bind(g, () => `<b>${sp.label}</b><div class="m">${sp.date}</div><div style="margin-top:4px">${sp.desc}</div>${sp.result ? `<div style="margin-top:8px"><b style="font-size:13px">Result: ${sp.result}</b></div>` : ""}`);
 }
 
 for (const r of ROWS) {
