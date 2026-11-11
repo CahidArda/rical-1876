@@ -10,20 +10,20 @@
   :root {
     --bg: #faf8f4; --fg: #1c1917; --muted: #78716c; --grid: #e7e5e4;
     --box: #ffffff; --box-stroke: #a8a29e; --party: #f5f5f4; --party-stroke: #d6d3d1;
-    --tip-bg: #1c1917; --tip-fg: #fafaf9; --gap: #f0ece4; --span: rgba(120,113,108,.07);
+    --tip-bg: #ffffff; --tip-fg: #1c1917; --tip-line: #e7e5e4; --gap: #f0ece4; --span: rgba(120,113,108,.07);
   }
   /* dark theme: follows the system unless the footer switch forces light or dark */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #161412; --fg: #f5f5f4; --muted: #a8a29e; --grid: #2e2a27;
       --box: #211e1b; --box-stroke: #57534e; --party: #2a2623; --party-stroke: #44403c;
-      --tip-bg: #f5f5f4; --tip-fg: #1c1917; --gap: #1f1c19; --span: rgba(245,245,244,.035); color-scheme: dark;
+      --tip-bg: #f5f5f4; --tip-fg: #1c1917; --tip-line: transparent; --gap: #1f1c19; --span: rgba(245,245,244,.035); color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
       --bg: #161412; --fg: #f5f5f4; --muted: #a8a29e; --grid: #2e2a27;
       --box: #211e1b; --box-stroke: #57534e; --party: #2a2623; --party-stroke: #44403c;
-      --tip-bg: #f5f5f4; --tip-fg: #1c1917; --gap: #1f1c19; --span: rgba(245,245,244,.035); color-scheme: dark;
+      --tip-bg: #f5f5f4; --tip-fg: #1c1917; --tip-line: transparent; --gap: #1f1c19; --span: rgba(245,245,244,.035); color-scheme: dark;
   }
   :root[data-theme="light"] { color-scheme: light; }
   * { box-sizing: border-box; }
@@ -120,8 +120,8 @@
   svg.focus .person.on { opacity: 1; }
   svg.focus .person.on .life { stroke-width: 3.6; }
   #tip { position: fixed; z-index: 10; pointer-events: none; max-width: 340px;
-    background: var(--tip-bg); color: var(--tip-fg); border-radius: 8px; padding: 10px 12px;
-    font-size: 13px; line-height: 1.45; box-shadow: 0 6px 24px rgba(0,0,0,.25); display: none; }
+    background: var(--tip-bg); color: var(--tip-fg); border: 1px solid var(--tip-line); border-radius: 10px; padding: 10px 12px;
+    font-size: 13px; line-height: 1.45; box-shadow: 0 10px 30px rgba(28,25,23,.14), 0 1px 3px rgba(28,25,23,.08); display: none; }
   #tip b { font-size: 14px; }
   #tip .m { opacity: .7; font-size: 12px; }
   #tip.has-img { max-width: calc(100vw - 16px); }
@@ -491,7 +491,7 @@ for (const [g, label] of Object.entries(GROUPS)) {
   lg.appendChild(s);
   // hover/tap: what the group was, who is in it, and their lines highlighted
   const people = P.filter(p => p.g === g);
-  bind(s, () => `<b>${label}</b>${GROUP_DESC[g] ? `<div style="margin-top:4px">${GROUP_DESC[g]}</div>` : ""}<div class="m" style="margin-top:6px">${people.map(p => `<span style="color:${p.c}">${p.name}</span>`).join(", ")}</div>`, people.map(p => p.id));
+  bind(s, () => `<b>${label}</b>${GROUP_DESC[g] ? `<div style="margin-top:4px">${GROUP_DESC[g]}</div>` : ""}<div class="m" style="margin-top:6px">${people.map(p => `<span style="${tc(p.c)}">${p.name}</span>`).join(", ")}</div>`, people.map(p => p.id));
 }
 
 const gSpan = el("g"), gBack = el("g"), gLines = el("g"), gBoxes = el("g"), gTop = el("g");
@@ -586,6 +586,7 @@ function bind(node, html, personId) {
 }
 document.addEventListener("click", () => { if (pinned) { pinned = false; clearAll(); } });
 
+const tc = c => `color:color-mix(in srgb, ${c} 72%, var(--tip-fg))`;  // person colour, readable on the card
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 const IMG_H = innerWidth < 480 ? 112 : 168;
 const imgBox = o => {
@@ -596,7 +597,7 @@ const imgLink = o => o.imgPage ? `<a class="wiki" href="${esc(o.imgPage)}" targe
 const withImg = (o, body) => o.img ? `<div class="tw">${imgBox(o)}<div class="tx">${body}</div></div>` : body;
 const links = o => (o.wiki || o.imgPage) ? `<div class="links">${wikiHtml(o)}${imgLink(o)}</div>` : "";
 const wikiHtml = o => o.wiki ? `<a class="wiki" href="https://en.wikipedia.org/wiki/${encodeURIComponent(o.wiki.replace(/ /g, "_"))}" target="_blank" rel="noopener">Wikipedia ↗</a>` : "";
-const personTip = p => withImg(p, `<b style="color:${p.c}">${p.name}</b><div class="m">${GROUPS[p.g]}</div><div style="margin-top:4px">${p.bio}</div><div style="margin-top:6px">✕ ${p.death}</div>${links(p)}`);
+const personTip = p => withImg(p, `<b style="${tc(p.c)}">${p.name}</b><div class="m">${GROUPS[p.g]}</div><div style="margin-top:4px">${p.bio}</div><div style="margin-top:6px">✕ ${p.death}</div>${links(p)}`);
 
 for (const p of P) {
   const g = el("g", { class: "person", "data-id": p.id }, gLines);
@@ -617,7 +618,7 @@ for (const p of P) {
 for (const r of ROWS.filter(r => r.t === "e")) {
   const top = r.y - BH / 2;
   const box = el("rect", { x: r.box.x0, y: top, width: r.box.w, height: BH, rx: 8, class: "ebox" }, gBoxes);
-  const partyHtml = r.parties.map(pt => `<li><b style="font-size:12px">${pt.name}:</b> ${pt.m.map(id => `<span style="color:${P[idx[id]].c}">${P[idx[id]].name}</span>`).join(", ")}</li>`).join("");
+  const partyHtml = r.parties.map(pt => `<li><b style="font-size:12px">${pt.name}:</b> ${pt.m.map(id => `<span style="${tc(P[idx[id]].c)}">${P[idx[id]].name}</span>`).join(", ")}</li>`).join("");
   const html = withImg(r, `<b>${r.title}</b><div class="m">${r.date}</div><div style="margin-top:4px">${r.desc}</div><ul>${partyHtml}</ul>${links(r)}`);
   bind(box, () => html, null);
   for (const pt of r.parties) {
@@ -644,7 +645,7 @@ for (const p of P) {
   const { x, y } = p.end;
   el("circle", { cx: x, cy: y, r: 10, fill: "var(--bg)", stroke: p.c, "stroke-width": 1.5 }, g);
   text("✕", { x, y: y + 5, "text-anchor": "middle", fill: p.c }, g);
-  bind(g, () => `<b style="color:${p.c}">✕ ${p.name}</b><div style="margin-top:4px">${p.death}</div>`, p.id);
+  bind(g, () => `<b style="${tc(p.c)}">✕ ${p.name}</b><div style="margin-top:4px">${p.death}</div>`, p.id);
 }
 return W;
 }
