@@ -37,7 +37,7 @@ const P = [
     death:"Died in exile in Neuchâtel, Switzerland, on 30 Jun 1948." },
   { id:"riza", name:"Ahmed Rıza", g:"cup", c:"#f43f5e", bio:"Positivist who led the CUP in Paris exile (Meşveret). Speaker of the 1908 parliament. Later drifted away from the Unionists.",
     death:"Died in Istanbul on 26 Feb 1930." },
-  { id:"sadik", name:"Miralay Sadık Bey", g:"opp", c:"#0ea5e9", bio:"Founding Unionist officer from Manastır who broke with the CUP leadership and co-led Hürriyet ve İtilâf.",
+  { id:"sadik", name:"Mehmed Sadık Bey", g:"opp", c:"#0ea5e9", bio:"Founding Unionist officer from Manastır who broke with the CUP leadership and co-led Hürriyet ve İtilâf.",
     death:"Died in exile in 1940." },
   { id:"kamil", name:"Kâmil Paşa", g:"opp", c:"#60a5fa", bio:"Veteran Grand Vizier and a leading opponent of the CUP.",
     death:"Died in exile in Nicosia, Cyprus, on 14 Nov 1913." },
@@ -81,7 +81,7 @@ const ROWS = [
   { t:"e", date:"1865–1867", title:"Young Ottomans",
     desc:"A secret 'Patriotic Alliance' of young bureaucrats and writers demands a constitution. In 1867 its leaders flee to Paris and London, where they publish Muhbir and Hürriyet.",
     parties:[{ name:"Young Ottomans", m:["nkemal","suavi"] }] },
-  { t:"e", date:"Apr 1873", title:"Vatan yahut Silistre",
+  { t:"e", date:"Apr 1873", title:"Vatan Yahut Silistre",
     desc:"Namık Kemal's patriotic play causes demonstrations in Istanbul, and he is exiled to Famagusta, Cyprus, for three years.",
     parties:[{ name:"Exiled to Cyprus", m:["nkemal"] }] },
   { t:"e", date:"Oct 1875", title:"Ramazan Kararnamesi",
@@ -259,6 +259,13 @@ const ROWS = [
   { t:"d", who:"sabahaddin", date:"30 Jun 1948" },
   { t:"d", who:"rauf", date:"16 Jul 1964" },
 ];
+
+
+// Wikipedia article titles (en.wikipedia.org); img/imgCredit may be added by hand
+const WIKI_P = {"suavi": "Ali Suavi", "nkemal": "Namık Kemal", "nedim": "Mahmud Nedim Pasha", "hasan": "Çerkez Hasan", "avni": "Hüseyin Avni Pasha", "midhat": "Midhat Pasha", "murad": "Murad V", "ah": "Abdul Hamid II", "m5": "Mehmed V", "vahdettin": "Mehmed VI", "ferid": "Damat Ferid Pasha", "vahdeti": "Derviş Vahdeti", "sabahaddin": "Mehmed Sabahaddin", "riza": "Ahmet Rıza", "sadik": "Mehmed Sadık Bey", "kamil": "Kâmil Pasha", "nazimp": "Nazım Pasha", "msevket": "Mahmud Shevket Pasha", "sait": "Said Halim Pasha", "talat": "Talaat Pasha", "enver": "Enver Pasha", "yakub": "Yakub Cemil", "niyazi": "Ahmed Niyazi", "cemal": "Djemal Pasha", "drnazim": "Mehmet Nâzım Bey", "sakir": "Bahaeddin Şakir", "cavid": "Mehmed Cavid", "kemal": "Mustafa Kemal Atatürk", "fethi": "Fethi Okyar", "rauf": "Rauf Orbay", "karabekir": "Kâzım Karabekir"};
+const WIKI_E = {"Young Ottomans": "Young Ottomans", "Vatan Yahut Silistre": "Vatan Yahut Silistre", "Abdülaziz deposed": "1876 Ottoman coup d'état", "Constitution proclaimed": "Constitution of the Ottoman Empire", "Çırağan raid": "Çırağan incident", "Salonika meets Paris": "Committee of Union and Progress", "To the mountains": "Young Turk Revolution", "Constitution restored": "Young Turk Revolution", "31 Mart uprising": "31 March incident", "Action Army takes Istanbul": "31 March incident", "Abdülhamid deposed": "31 March incident", "Off to Libya": "Italo-Turkish War", "Hürriyet ve İtilâf founded": "Freedom and Accord Party", "Election of Clubs": "1912 Ottoman general election", "Saviour Officers": "1912 Ottoman coup d'état", "First Balkan War": "First Balkan War", "Bab-ı Ali raid": "1913 Ottoman coup d'état", "Edirne retaken": "Second Balkan War", "The triumvirate": "Three Pashas", "Secret German alliance": "German–Ottoman alliance", "Into the World War": "Ottoman entry into World War I", "Tehcir": "Temporary Law of Deportation", "Gallipoli": "Gallipoli campaign", "Mudros armistice": "Armistice of Mudros", "Amasya & Erzurum": "Amasya Circular", "Istanbul courts-martial": "Istanbul trials of 1919–1920", "Malta exiles": "Malta exiles", "Treaty of Sèvres": "Treaty of Sèvres", "Sakarya vs Batum": "Battle of the Sakarya", "Sultanate abolished": "Abolition of the Ottoman sultanate", "Dynasty exiled": "Abolition of the Caliphate", "Terakkiperver party": "Progressive Republican Party (Turkey)", "Free Republican Party": "Liberal Republican Party (Turkey)"};
+for (const p of P) if (WIKI_P[p.id]) p.wiki = WIKI_P[p.id];
+for (const r of ROWS) if (r.t === "e" && WIKI_E[r.title]) r.wiki = WIKI_E[r.title];
 
 window.TIMELINES.ottoman = {
   tab: "Ottoman Empire",

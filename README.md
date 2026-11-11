@@ -9,8 +9,8 @@ and who outlived whom. Three timelines, switchable with the tabs at the top:
 | Tab | Span | Cast |
 |---|---|---|
 | Ottoman Empire (`#ottoman`) | 1865–1964 | Midhat, Abdülhamid, Enver, Talât, Kemal and the rest of the *ricâl-i devlet* |
-| Roman Republic (`#rome`) | 107–27 BC | Marius, Sulla, Pompey, Crassus, Caesar, Cicero, Cato, Brutus, Antony, Octavian |
-| French Revolution (`#france`) | 1789–1838 | Lafayette, Danton, Robespierre, Fouché, Talleyrand, Barras, Napoleon |
+| Roman Republic (`#rome`) | 133–27 BC | the Gracchi, Marius, Sulla, Pompey, Crassus, Caesar, Cicero, Cato, Brutus, Antony, Octavian |
+| French Revolution (`#france`) | 1789–1850 | Lafayette, Danton, Robespierre, Fouché, Talleyrand, Barras, Napoleon, Bernadotte |
 
 Each vertical line is a person and time flows down. When people take part in an event their
 lines merge into the event's box, each sitting inside the party they were on. A line ends
@@ -46,7 +46,11 @@ or just open `index.html` in a browser.
 Each file in `timelines/` defines `GROUPS` (factions and colours), `P` (people: name,
 faction, colour, bio, how they died) and `ROWS` (events, deaths and time gaps, in order),
 and registers itself on `window.TIMELINES`. To add a timeline, add a file, a `<script>` tag
-and its id in `TL_ORDER` in `index.html`. An event lists its
+and its id in `TL_ORDER` in `index.html`.
+
+Each person and event can also carry `wiki` (an English Wikipedia article title, shown as a
+link in the tooltip), and optionally `img` (an image URL, e.g. from Wikimedia Commons) with
+`imgCredit`, shown at the top of the tooltip. Images are never hosted here. An event lists its
 parties and their members; `dies` marks people who die in that event. The layout is
 recomputed on load.
 
