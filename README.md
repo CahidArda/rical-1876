@@ -21,9 +21,12 @@ where the person dies. Hover over a line, a box or a ✕ for details, or tap it 
 Static files, no build step, no runtime dependencies: `index.html` holds the renderer (plain
 JavaScript drawing an SVG), and each timeline is a data file in `timelines/`.
 
-Solving a layout takes a few hundred milliseconds, so the solved layouts (desktop and mobile)
-are stored in `timelines/layout-cache.js` and the page only draws, in ~20 ms. After editing a
-timeline, regenerate it:
+The page is pre-drawn. `bake.py` solves every layout (a few hundred milliseconds each), stores
+the results in `timelines/layout-cache.js`, then renders every timeline for desktop and mobile
+and writes the finished SVG, legends, tabs and titles into `index.html` between the
+`<!--BAKE:…-->` markers. The browser paints the chart straight from the HTML; the script then
+swaps in identical, interactive copies (~20 ms each). After editing a timeline or the
+renderer, re-bake:
 
 ```sh
 pip install playwright && playwright install chromium
@@ -31,7 +34,8 @@ python3 bake.py
 ```
 
 If you forget, nothing breaks: the cache entry carries a signature of the data, and on a
-mismatch the page solves the layout in the browser as before. `bake.py` also warns if a
+mismatch the page solves the layout in the browser; the live copy replaces the stale
+pre-drawn one as soon as the script runs. `bake.py` also warns if a
 timeline gets wider than the shared desktop width (`MIN_W`, 1150px), which keeps tabs from
 shifting when you switch.
 
@@ -74,7 +78,7 @@ photographs of people are deliberately left out, which is why most of the Ottoma
 parties and their members; `dies` marks people who die in that event.
 
 A timeline can also export `SPANS`: periods drawn as a faint band from one event (`from`, by
-title) to another (`to`), with a small label on the right edge and a tooltip (`label`,
+title) to another (`to`), with a bracket and labels at its start and end on the right edge, and a tooltip (`label`,
 `date`, `desc`). The French timeline uses them for the seven coalitions.
 
 ## Deployment
