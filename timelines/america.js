@@ -7,6 +7,11 @@ const GROUPS = {
   army:   "Continental Army",
   fed:    "Federalists",
   rep:    "Democratic-Republicans",
+  whig:   "Whigs",
+  dem:    "Jacksonian Democrats",
+  abol:   "Abolitionists",
+  union:  "Republicans and the Union",
+  csa:    "Confederacy",
 };
 // shown when hovering a group in the legend
 const GROUP_DESC = {
@@ -16,8 +21,13 @@ const GROUP_DESC = {
   "army": "Officers of the Continental Army and the foreign volunteers who joined it.",
   "fed": "The party of a strong national government, close ties with Britain and Hamilton's financial system.",
   "rep": "The party of Jefferson and Madison: states' rights, farmers, and sympathy for revolutionary France.",
+  "whig": "The party of Clay and Webster: a national bank, tariffs, roads and canals, and opposition to Jackson.",
+  "dem": "The party built around Andrew Jackson, strongest in the South and West.",
+  "abol": "Campaigners for ending slavery in the United States.",
+  "union": "The party founded in 1854 against the spread of slavery, and the Union's leaders in the Civil War.",
+  "csa": "The government formed in 1861 by eleven seceding Southern states, and its commanders.",
 };
-const GROUP_COLOR = { crown:"#dc2626", loy:"#f97316", pat:"#16a34a", army:"#2563eb", fed:"#78716c", rep:"#7c3aed" };
+const GROUP_COLOR = { crown:"#dc2626", loy:"#f97316", pat:"#16a34a", army:"#2563eb", fed:"#78716c", rep:"#7c3aed", whig:"#0891b2", dem:"#ca8a04", abol:"#db2777", union:"#4f46e5", csa:"#92400e" };
 
 const P = [
   { id:"george3", name:"George III", g:"crown", c:"#dc2626", bio:"King of Great Britain from 1760; reigned through the whole war and long after it.",
@@ -76,6 +86,32 @@ const P = [
     death:"Died in New York on 4 Jul 1831, the third President to die on Independence Day." },
   { id:"burr", name:"Aaron Burr", g:"rep", c:"#6d28d9", bio:"New York lawyer and politician; Jefferson's Vice President, Hamilton's rival.",
     death:"Died on Staten Island, 14 Sep 1836." },
+  { id:"jqadams", name:"John Quincy Adams", g:"whig", c:"#0891b2", bio:"John Adams's son; Secretary of State, sixth President, then a congressman for seventeen years.",
+    death:"Collapsed at his desk in the House and died two days later, 23 Feb 1848." },
+  { id:"clay", name:"Henry Clay", g:"whig", c:"#06b6d4", bio:"Kentucky senator and Speaker, the 'Great Compromiser'; ran for President three times.",
+    death:"Died in Washington, 29 Jun 1852." },
+  { id:"webster", name:"Daniel Webster", g:"whig", c:"#67e8f9", bio:"Massachusetts senator, Secretary of State and the great orator of the Union.",
+    death:"Died at Marshfield, Massachusetts, 24 Oct 1852." },
+  { id:"jackson", name:"Andrew Jackson", g:"dem", c:"#ca8a04", bio:"General who won at New Orleans in 1815; seventh President, 1829–1837.",
+    death:"Died at the Hermitage, Tennessee, 8 Jun 1845." },
+  { id:"calhoun", name:"John C. Calhoun", g:"dem", c:"#eab308", bio:"South Carolina's leading statesman; Vice President, then the South's chief voice in the Senate.",
+    death:"Died in Washington, 31 Mar 1850." },
+  { id:"douglas", name:"Stephen Douglas", g:"dem", c:"#a16207", bio:"Illinois senator, the 'Little Giant', and Lincoln's great rival.",
+    death:"Died of typhoid fever in Chicago, 3 Jun 1861." },
+  { id:"douglass", name:"Frederick Douglass", g:"abol", c:"#db2777", bio:"Escaped from slavery in 1838; abolitionist orator, writer and editor.",
+    death:"Died in Washington, 20 Feb 1895." },
+  { id:"brown", name:"John Brown", g:"abol", c:"#f472b6", bio:"Abolitionist who took up arms against slavery in Kansas and Virginia.",
+    death:"Hanged at Charles Town, Virginia, 2 Dec 1859." },
+  { id:"lincoln", name:"Lincoln", g:"union", c:"#4f46e5", bio:"Illinois lawyer and congressman; sixteenth President, 1861–1865.",
+    death:"Shot at Ford's Theatre on 14 Apr 1865; died the next morning." },
+  { id:"seward", name:"William Seward", g:"union", c:"#818cf8", bio:"New York governor and senator; Lincoln's rival for the nomination, then his Secretary of State.",
+    death:"Died at Auburn, New York, 10 Oct 1872." },
+  { id:"grant", name:"Grant", g:"union", c:"#3730a3", bio:"Union general who took Vicksburg and accepted Lee's surrender; later eighteenth President.",
+    death:"Died at Mount McGregor, New York, 23 Jul 1885." },
+  { id:"davis", name:"Jefferson Davis", g:"csa", c:"#92400e", bio:"Mississippi senator and former Secretary of War; President of the Confederacy.",
+    death:"Died in New Orleans, 6 Dec 1889." },
+  { id:"lee", name:"Robert E. Lee", g:"csa", c:"#c2410c", bio:"US Army officer who went with Virginia in 1861 and commanded the Confederacy's main army.",
+    death:"Died at Lexington, Virginia, 12 Oct 1870." },
 ];
 
 const ROWS = [
@@ -115,6 +151,7 @@ const ROWS = [
   { t:"e", date:"Jun 1778", title:"Monmouth",
     desc:"Charles Lee, exchanged and back in command, orders a retreat; Washington rides up, rebukes him and rallies the troops. Hamilton and Lafayette are in the thick of it. Lee is court-martialled and suspended.",
     parties:[{ name:"Rallied the army", m:["washington"] },{ name:"In the fight", m:["hamilton","lafayette"] },{ name:"Court-martialled", m:["clee"] }] },
+  { t:"d", who:"hutchinson", date:"3 Jun 1780" },
   { t:"e", date:"Aug 1780", title:"Camden",
     desc:"Gates's southern army is routed by Cornwallis, and Gates rides off the field ahead of it. Greene takes over the south and wears Cornwallis down over the next year.",
     parties:[{ name:"Routed", m:["gates"] },{ name:"Victor", m:["cornwallis"] },{ name:"Took over the south", m:["greene"] }] },
@@ -193,28 +230,87 @@ const ROWS = [
     desc:"Monroe succeeds Madison, the third Virginian Republican in a row. The Federalist party fades away.",
     parties:[{ name:"President", m:["monroe"] },{ name:"Retired", m:["madison"] }] },
   { t:"d", who:"george3", date:"29 Jan 1820" },
+  { t:"e", date:"Mar 1820", title:"Missouri Compromise",
+    desc:"Missouri asks to join the Union as a slave state. Clay helps broker the deal: Missouri enters with slavery, Maine without, and slavery is barred in the rest of the Louisiana lands north of 36°30′. Jefferson calls the crisis 'a fire bell in the night'.",
+    parties:[{ name:"Brokered it", m:["clay"] },{ name:"President", m:["monroe"] },{ name:"Alarmed", m:["jefferson"] }] },
+  { t:"e", date:"Dec 1823", title:"Monroe Doctrine",
+    desc:"Monroe declares the Americas closed to new European colonisation. His Secretary of State, John Quincy Adams, writes most of it.",
+    parties:[{ name:"President", m:["monroe"] },{ name:"Wrote it", m:["jqadams"] }] },
   { t:"e", date:"1824–1825", title:"Lafayette's farewell tour",
     desc:"Lafayette, the last surviving general of the war, tours all 24 states as the nation's guest. He visits Adams at Quincy and stays with Jefferson at Monticello, where Madison joins them, and with President Monroe.",
     parties:[{ name:"Guest", m:["lafayette"] },{ name:"Hosts", m:["jadams","jefferson","madison","monroe"] }] },
+  { t:"e", date:"1824–1825", title:"Election of 1824",
+    desc:"Four candidates split the vote. Jackson wins the most votes but no majority, and the House chooses John Quincy Adams, who makes Clay his Secretary of State. Calhoun becomes Vice President. Jackson's supporters cry foul.",
+    parties:[{ name:"Chosen by the House", m:["jqadams"] },{ name:"Secretary of State", m:["clay"] },{ name:"Most votes", m:["jackson"] }] },
   { t:"e", date:"4 Jul 1826", title:"Fiftieth anniversary",
     desc:"On the fiftieth anniversary of the Declaration, Jefferson dies at Monticello and, hours later, Adams at Quincy. Adams's last words are said to have been 'Thomas Jefferson survives'.",
     parties:[{ name:"Died the same day", m:["jefferson","jadams"] }], dies:["jefferson","jadams"] },
+  { t:"e", date:"1828", title:"Jackson elected",
+    desc:"Jackson defeats John Quincy Adams in a bitter campaign. Calhoun stays on as Vice President.",
+    parties:[{ name:"President", m:["jackson"] },{ name:"Vice President", m:["calhoun"] },{ name:"Defeated", m:["jqadams"] }] },
   { t:"d", who:"jay", date:"17 May 1829" },
   { t:"d", who:"monroe", date:"4 Jul 1831" },
+  { t:"e", date:"1832–1833", title:"Nullification crisis",
+    desc:"South Carolina declares the federal tariff void. Jackson threatens force; Calhoun, who wrote the theory behind it, resigns as Vice President. Clay brokers a compromise tariff. Webster had already defended the Union in the Senate: 'Liberty and Union, now and for ever, one and inseparable'.",
+    parties:[{ name:"President", m:["jackson"] },{ name:"Resigned", m:["calhoun"] },{ name:"Compromise tariff", m:["clay"] },{ name:"For the Union", m:["webster"] }] },
   { t:"d", who:"lafayette", date:"20 May 1834" },
   { t:"d", who:"madison", date:"28 Jun 1836" },
   { t:"d", who:"burr", date:"14 Sep 1836" },
+  { t:"g", label:"1836 → 1845" },
+  { t:"d", who:"jackson", date:"8 Jun 1845" },
+  { t:"d", who:"jqadams", date:"23 Feb 1848" },
+  { t:"e", date:"1850", title:"Compromise of 1850",
+    desc:"After the war with Mexico, Congress fights over slavery in the new territories. Clay proposes a compromise and Webster backs it; Calhoun, too ill to speak, has his opposition read for him and dies weeks later. Douglas steers the final bills through.",
+    parties:[{ name:"Proposed it", m:["clay"] },{ name:"Backed it", m:["webster"] },{ name:"Opposed it", m:["calhoun"] },{ name:"Passed it", m:["douglas"] }] },
+  { t:"d", who:"calhoun", date:"31 Mar 1850" },
+  { t:"d", who:"clay", date:"29 Jun 1852" },
+  { t:"d", who:"webster", date:"24 Oct 1852" },
+  { t:"e", date:"1854", title:"Kansas–Nebraska Act",
+    desc:"Douglas's act lets settlers in Kansas and Nebraska decide on slavery themselves, undoing the Missouri line. The Republican Party is founded against it and Lincoln returns to politics; Seward leads the opposition in the Senate. In Kansas, armed clashes follow, with John Brown among the fighters.",
+    parties:[{ name:"Wrote it", m:["douglas"] },{ name:"Opposed it", m:["lincoln","seward"] },{ name:"In Kansas", m:["brown"] }] },
+  { t:"e", date:"1858", title:"Lincoln–Douglas debates",
+    desc:"Lincoln challenges Douglas for his Senate seat in Illinois. Their seven debates, mostly about slavery in the territories, make Lincoln a national figure. Douglas keeps the seat.",
+    parties:[{ name:"Kept the seat", m:["douglas"] },{ name:"Challenger", m:["lincoln"] }] },
+  { t:"e", date:"Oct 1859", title:"Harpers Ferry",
+    desc:"John Brown seizes the federal arsenal at Harpers Ferry, hoping to start an uprising against slavery. Colonel Robert E. Lee leads the Marines who capture him. Douglass had declined to join. Brown is tried and hanged in December.",
+    parties:[{ name:"Led the raid", m:["brown"] },{ name:"Captured him", m:["lee"] },{ name:"Declined to join", m:["douglass"] }], dies:["brown"] },
+  { t:"e", date:"1860", title:"Election of 1860",
+    desc:"Lincoln wins the Republican nomination over Seward, then the presidency over a divided field that includes Douglas. Southern states begin to secede.",
+    parties:[{ name:"Elected", m:["lincoln"] },{ name:"Lost the nomination", m:["seward"] },{ name:"Lost the election", m:["douglas"] }] },
+  { t:"e", date:"Apr 1861", title:"Fort Sumter",
+    desc:"Confederate guns fire on Fort Sumter and the war begins. Jefferson Davis leads the Confederacy; Lee declines a Union command and goes with Virginia. Douglas rallies Northern Democrats to the Union, then dies in June.",
+    parties:[{ name:"President", m:["lincoln"] },{ name:"Secretary of State", m:["seward"] },{ name:"Rallied to the Union", m:["douglas"] },{ name:"Confederate President", m:["davis"] },{ name:"Went with Virginia", m:["lee"] }] },
+  { t:"d", who:"douglas", date:"3 Jun 1861" },
+  { t:"e", date:"Jan 1863", title:"Emancipation Proclamation",
+    desc:"Lincoln declares enslaved people in Confederate-held areas free and opens the army to Black soldiers. Seward had advised waiting for a victory; Douglass, who pressed for it, recruits for the new regiments.",
+    parties:[{ name:"Issued it", m:["lincoln"] },{ name:"Advised on timing", m:["seward"] },{ name:"Recruited soldiers", m:["douglass"] }] },
+  { t:"e", date:"Jul 1863", title:"Gettysburg and Vicksburg",
+    desc:"In the same week Lee's invasion of the North is turned back at Gettysburg and Grant takes Vicksburg, splitting the Confederacy. In November Lincoln gives the Gettysburg Address.",
+    parties:[{ name:"Turned back", m:["lee"] },{ name:"Took Vicksburg", m:["grant"] },{ name:"The address", m:["lincoln"] }] },
+  { t:"e", date:"Apr 1865", title:"Appomattox",
+    desc:"Grant, now general-in-chief, accepts Lee's surrender at Appomattox Court House. Davis flees south and is captured in May.",
+    parties:[{ name:"Accepted", m:["grant"] },{ name:"Surrendered", m:["lee"] },{ name:"Fled", m:["davis"] }] },
+  { t:"e", date:"14 Apr 1865", title:"Ford's Theatre",
+    desc:"Five days later Lincoln is shot at Ford's Theatre and dies the next morning. The same night a conspirator stabs Seward, who survives.",
+    parties:[{ name:"Shot", m:["lincoln"] },{ name:"Stabbed, survived", m:["seward"] }], dies:["lincoln"] },
+  { t:"g", label:"1865 → 1895" },
+  { t:"d", who:"lee", date:"12 Oct 1870" },
+  { t:"d", who:"seward", date:"10 Oct 1872" },
+  { t:"d", who:"grant", date:"23 Jul 1885" },
+  { t:"d", who:"davis", date:"6 Dec 1889" },
+  { t:"d", who:"douglass", date:"20 Feb 1895" },
 ];
 
 // Wikipedia article titles (en.wikipedia.org)
-const WIKI_P = {"george3":"George III","north":"Frederick North, Lord North","gage":"Thomas Gage","burgoyne":"John Burgoyne","cornwallis":"Charles Cornwallis, 1st Marquess Cornwallis","andre":"John André","hutchinson":"Thomas Hutchinson (governor)","wfranklin":"William Franklin","shippen":"Peggy Shippen","sadams":"Samuel Adams","hancock":"John Hancock","henry":"Patrick Henry","bfranklin":"Benjamin Franklin","paine":"Thomas Paine","washington":"George Washington","greene":"Nathanael Greene","knox":"Henry Knox","gates":"Horatio Gates","clee":"Charles Lee (general)","arnold":"Benedict Arnold","lafayette":"Gilbert du Motier, Marquis de Lafayette","hamilton":"Alexander Hamilton","jadams":"John Adams","jay":"John Jay","jefferson":"Thomas Jefferson","madison":"James Madison","monroe":"James Monroe","burr":"Aaron Burr"};
-const WIKI_E = {"Stamp Act":"Stamp Act 1765","Boston Massacre":"Boston Massacre","Boston Tea Party":"Boston Tea Party","The Cockpit":"Hutchinson letters affair","Lexington and Concord":"Battles of Lexington and Concord","Washington takes command":"Siege of Boston","Common Sense":"Common Sense","Declaration of Independence":"United States Declaration of Independence","Trenton":"Battle of Trenton","Saratoga":"Battles of Saratoga","French alliance":"Treaty of Alliance (1778)","Monmouth":"Battle of Monmouth","Camden":"Battle of Camden","Arnold changes sides":"John André","Yorktown":"Siege of Yorktown","Treaty of Paris":"Treaty of Paris (1783)","Constitutional Convention":"Constitutional Convention (United States)","Ratification":"The Federalist Papers","First government":"Presidency of George Washington","The dinner":"Compromise of 1790","Two parties":"First Party System","Paine freed":"Thomas Paine","Jay Treaty":"Jay Treaty","Washington steps down":"George Washington's Farewell Address","Alien and Sedition Acts":"Alien and Sedition Acts","Election of 1800":"1800 United States presidential election","Louisiana Purchase":"Louisiana Purchase","Weehawken":"Burr–Hamilton duel","Burr's treason trial":"Burr conspiracy","Old friends":"Benjamin Rush","War of 1812":"War of 1812","Era of Good Feelings":"Era of Good Feelings","Lafayette's farewell tour":"Visit of the Marquis de Lafayette to the United States","Fiftieth anniversary":"Independence Day (United States)"};
+const WIKI_P = {"george3":"George III","north":"Frederick North, Lord North","gage":"Thomas Gage","burgoyne":"John Burgoyne","cornwallis":"Charles Cornwallis, 1st Marquess Cornwallis","andre":"John André","hutchinson":"Thomas Hutchinson (governor)","wfranklin":"William Franklin","shippen":"Peggy Shippen","sadams":"Samuel Adams","hancock":"John Hancock","henry":"Patrick Henry","bfranklin":"Benjamin Franklin","paine":"Thomas Paine","washington":"George Washington","greene":"Nathanael Greene","knox":"Henry Knox","gates":"Horatio Gates","clee":"Charles Lee (general)","arnold":"Benedict Arnold","lafayette":"Gilbert du Motier, Marquis de Lafayette","hamilton":"Alexander Hamilton","jadams":"John Adams","jay":"John Jay","jefferson":"Thomas Jefferson","madison":"James Madison","monroe":"James Monroe","burr":"Aaron Burr","jqadams":"John Quincy Adams","clay":"Henry Clay","webster":"Daniel Webster","jackson":"Andrew Jackson","calhoun":"John C. Calhoun","douglas":"Stephen A. Douglas","douglass":"Frederick Douglass","brown":"John Brown (abolitionist)","lincoln":"Abraham Lincoln","seward":"William H. Seward","grant":"Ulysses S. Grant","davis":"Jefferson Davis","lee":"Robert E. Lee"};
+const WIKI_E = {"Stamp Act":"Stamp Act 1765","Boston Massacre":"Boston Massacre","Boston Tea Party":"Boston Tea Party","The Cockpit":"Hutchinson letters affair","Lexington and Concord":"Battles of Lexington and Concord","Washington takes command":"Siege of Boston","Common Sense":"Common Sense","Declaration of Independence":"United States Declaration of Independence","Trenton":"Battle of Trenton","Saratoga":"Battles of Saratoga","French alliance":"Treaty of Alliance (1778)","Monmouth":"Battle of Monmouth","Camden":"Battle of Camden","Arnold changes sides":"John André","Yorktown":"Siege of Yorktown","Treaty of Paris":"Treaty of Paris (1783)","Constitutional Convention":"Constitutional Convention (United States)","Ratification":"The Federalist Papers","First government":"Presidency of George Washington","The dinner":"Compromise of 1790","Two parties":"First Party System","Paine freed":"Thomas Paine","Jay Treaty":"Jay Treaty","Washington steps down":"George Washington's Farewell Address","Alien and Sedition Acts":"Alien and Sedition Acts","Election of 1800":"1800 United States presidential election","Louisiana Purchase":"Louisiana Purchase","Weehawken":"Burr–Hamilton duel","Burr's treason trial":"Burr conspiracy","Old friends":"Benjamin Rush","War of 1812":"War of 1812","Era of Good Feelings":"Era of Good Feelings","Lafayette's farewell tour":"Visit of the Marquis de Lafayette to the United States","Fiftieth anniversary":"Independence Day (United States)","Missouri Compromise":"Missouri Compromise","Monroe Doctrine":"Monroe Doctrine","Election of 1824":"1824 United States presidential election","Jackson elected":"1828 United States presidential election","Nullification crisis":"Nullification crisis","Compromise of 1850":"Compromise of 1850","Kansas–Nebraska Act":"Kansas–Nebraska Act","Lincoln–Douglas debates":"Lincoln–Douglas debates","Harpers Ferry":"John Brown's raid on Harpers Ferry","Election of 1860":"1860 United States presidential election","Fort Sumter":"Battle of Fort Sumter","Emancipation Proclamation":"Emancipation Proclamation","Gettysburg and Vicksburg":"Battle of Gettysburg","Appomattox":"Battle of Appomattox Court House","Ford's Theatre":"Assassination of Abraham Lincoln"};
 for (const p of P) if (WIKI_P[p.id]) p.wiki = WIKI_P[p.id];
 for (const r of ROWS) if ((r.t === "e" || r.t === "m") && WIKI_E[r.title]) r.wiki = WIKI_E[r.title];
 
 // Images from Wikidata (P18), served by Wikimedia Commons; nothing is hosted here.
-// Paintings and engravings only: these people lived before photography.
-const IMG_FILES = {"Benjamin Franklin": "Joseph Siffrein Duplessis - Benjamin Franklin - Google Art Project.jpg", "George Washington": "Gilbert Stuart Williamstown Portrait of George Washington.jpg", "James Madison": "James Madison.jpg", "James Monroe": "James Monroe White House portrait 1819 (cropped)(2).jpg", "John Hancock": "John Hancock 1770.jpg", "Thomas Jefferson": "Official Presidential portrait of Thomas Jefferson (by Rembrandt Peale, 1800).jpg", "Thomas Paine": "Laurent Dabos – Thomas Paine – Google Art Project.jpg", "Alexander Hamilton": "Alexander Hamilton (NPG).jpg", "George III": "Allan Ramsay - King George III in coronation robes - Google Art Project.jpg", "Aaron Burr": "Aaron Burr Portrait (cropped).jpg", "Patrick Henry": "Patrick henry.JPG", "Gilbert du Motier, Marquis de Lafayette": "Gilbert du Motier Marquis de Lafayette.PNG", "John Burgoyne": "General John Burgoyne - Reynolds c. 1766.jpg", "Frederick North, Lord North": "Frederick North, 2nd Earl of Guilford by Nathaniel Dance, (later Sir Nathaniel Dance-Holland, Bt).jpg", "Thomas Hutchinson (governor)": "ThomasHutchinsonByEdwardTruman.jpg", "Thomas Gage": "Thomas Gage John Singleton Copley.jpeg", "William Franklin": "William Franklin painting attributed to Mather Brown.jpg", "Henry Knox": "Charles Peale Polk - Henry Knox - NPG.73.11 - National Portrait Gallery.jpg", "Horatio Gates": "HoratioGatesByStuart.jpeg", "Nathanael Greene": "Nathanael Greene by John Trumbull 1792.jpeg", "John André": "George Engleheart - Major André - B1974.2.33 - Yale Center for British Art.jpg", "Benedict Arnold": "Benedict Arnold 1color.jpg", "Peggy Shippen": "Peggy-Shipped cropped.jpg", "John Adams": "Gilbert Stuart, John Adams, c. 1800-1815, NGA 42933.jpg", "Samuel Adams": "Samuel Adams by John Singleton Copley.jpg", "John Jay": "John Jay (Gilbert Stuart portrait).jpg", "Charles Cornwallis, 1st Marquess Cornwallis": "Charles Cornwallis, 1st Marquess Cornwallis.png", "Charles Lee (general)": "Charles Lee, 1731-1782.jpg", "Battles of Saratoga": "Surrender of General Burgoyne.jpg", "Boston Massacre": "The Boston Massacre MET DT2086.jpg", "United States Declaration of Independence": "United States Declaration of Independence.jpg", "Common Sense": "Commonsense.jpg", "Treaty of Alliance (1778)": "Franco American treaty of alliance 6 feb 1778.jpg", "Battle of Trenton": "Battle of Trenton by Charles McBarron.jpg", "Battle of Monmouth": "Washington Rallying the Troops at Monmouth, 1857, Leutze.jpg", "Battle of Camden": "Battle of Camden.jpg", "Siege of Yorktown": "Surrender of Lord Cornwallis.jpg", "Treaty of Paris (1783)": "Treaty of Paris (1783).jpg", "The Federalist Papers": "The Federalist (1st ed, 1788, vol I, title page) - 02.jpg", "Burr–Hamilton duel": "Hamilton-burr-duel.jpg", "Era of Good Feelings": "4th-of-July-1819-Philadelphia-John-Lewis-Krimmel.JPG", "Constitutional Convention (United States)": "Scene at the Signing of the Constitution of the United States.jpg", "Boston Tea Party": "Boston Tea Party w.jpg", "Siege of Boston": "The Evacuation of Boston.jpg", "Jay Treaty": "Jay's-treaty.jpg"};
+// Paintings and engravings only; the Civil War generation was photographed, and photographs
+// of people are left out on purpose.
+const IMG_FILES = {"Benjamin Franklin": "Joseph Siffrein Duplessis - Benjamin Franklin - Google Art Project.jpg", "George Washington": "Gilbert Stuart Williamstown Portrait of George Washington.jpg", "James Madison": "James Madison.jpg", "James Monroe": "James Monroe White House portrait 1819 (cropped)(2).jpg", "John Hancock": "John Hancock 1770.jpg", "Thomas Jefferson": "Official Presidential portrait of Thomas Jefferson (by Rembrandt Peale, 1800).jpg", "Thomas Paine": "Laurent Dabos – Thomas Paine – Google Art Project.jpg", "Alexander Hamilton": "Alexander Hamilton (NPG).jpg", "George III": "Allan Ramsay - King George III in coronation robes - Google Art Project.jpg", "Aaron Burr": "Aaron Burr Portrait (cropped).jpg", "Patrick Henry": "Patrick henry.JPG", "Gilbert du Motier, Marquis de Lafayette": "Gilbert du Motier Marquis de Lafayette.PNG", "John Burgoyne": "General John Burgoyne - Reynolds c. 1766.jpg", "Frederick North, Lord North": "Frederick North, 2nd Earl of Guilford by Nathaniel Dance, (later Sir Nathaniel Dance-Holland, Bt).jpg", "Thomas Hutchinson (governor)": "ThomasHutchinsonByEdwardTruman.jpg", "Thomas Gage": "Thomas Gage John Singleton Copley.jpeg", "William Franklin": "William Franklin painting attributed to Mather Brown.jpg", "Henry Knox": "Charles Peale Polk - Henry Knox - NPG.73.11 - National Portrait Gallery.jpg", "Horatio Gates": "HoratioGatesByStuart.jpeg", "Nathanael Greene": "Nathanael Greene by John Trumbull 1792.jpeg", "John André": "George Engleheart - Major André - B1974.2.33 - Yale Center for British Art.jpg", "Benedict Arnold": "Benedict Arnold 1color.jpg", "Peggy Shippen": "Peggy-Shipped cropped.jpg", "John Adams": "Gilbert Stuart, John Adams, c. 1800-1815, NGA 42933.jpg", "Samuel Adams": "Samuel Adams by John Singleton Copley.jpg", "John Jay": "John Jay (Gilbert Stuart portrait).jpg", "Charles Cornwallis, 1st Marquess Cornwallis": "Charles Cornwallis, 1st Marquess Cornwallis.png", "Charles Lee (general)": "Charles Lee, 1731-1782.jpg", "Battles of Saratoga": "Surrender of General Burgoyne.jpg", "Boston Massacre": "The Boston Massacre MET DT2086.jpg", "United States Declaration of Independence": "United States Declaration of Independence.jpg", "Common Sense": "Commonsense.jpg", "Treaty of Alliance (1778)": "Franco American treaty of alliance 6 feb 1778.jpg", "Battle of Trenton": "Battle of Trenton by Charles McBarron.jpg", "Battle of Monmouth": "Washington Rallying the Troops at Monmouth, 1857, Leutze.jpg", "Battle of Camden": "Battle of Camden.jpg", "Siege of Yorktown": "Surrender of Lord Cornwallis.jpg", "Treaty of Paris (1783)": "Treaty of Paris (1783).jpg", "The Federalist Papers": "The Federalist (1st ed, 1788, vol I, title page) - 02.jpg", "Burr–Hamilton duel": "Hamilton-burr-duel.jpg", "Era of Good Feelings": "4th-of-July-1819-Philadelphia-John-Lewis-Krimmel.JPG", "Constitutional Convention (United States)": "Scene at the Signing of the Constitution of the United States.jpg", "Boston Tea Party": "Boston Tea Party w.jpg", "Siege of Boston": "The Evacuation of Boston.jpg", "Jay Treaty": "Jay's-treaty.jpg","Andrew Jackson": "Andrew jackson head (cropped).jpg", "John C. Calhoun": "George Peter Alexander Healy - Portrait of John C. Calhoun (ca. 1845) - Google Art Project (cropped).jpg", "Battle of Gettysburg": "Thure de Thulstrup - L. Prang and Co. - Battle of Gettysburg - Restoration by Adam Cuerden (cropped).jpg", "Emancipation Proclamation": "Emancipation- the past and the future (20186657008).jpg", "Battle of Fort Sumter": "Bombardment of Fort Sumter.jpg", "Battle of Appomattox Court House": "General Robert E. Lee surrenders at Appomattox Court House 1865.jpg", "John Brown's raid on Harpers Ferry": "Gen. Robert Edward Lee; soldier, citizen, and Christian patriot (1897) (14597361849) (cropped).jpg"};
 const commons = f => ({ imgR: (window.IMG_RATIO || {})[f] || 0.8, img: "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(f) + "?width=360",
   imgPage: "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(f.replace(/ /g, "_")) });
 const usedImg = new Set();
@@ -228,13 +324,16 @@ const SPANS = [
   { from:"Washington steps down", to:"Election of 1800", label:"Adams", date:"1797–1801", desc:"John Adams's single term as President." },
   { from:"Louisiana Purchase", to:"Burr's treason trial", label:"Jefferson", date:"1801–1809", desc:"Thomas Jefferson's two terms as President." },
   { from:"Old friends", to:"War of 1812", label:"Madison", date:"1809–1817", desc:"James Madison's two terms as President." },
+  { from:"Election of 1824", to:"Fiftieth anniversary", label:"J. Q. Adams", date:"1825–1829", desc:"John Quincy Adams's single term as President." },
+  { from:"Jackson elected", to:"Nullification crisis", label:"Jackson", date:"1829–1837", desc:"Andrew Jackson's two terms as President." },
+  { from:"Fort Sumter", to:"Appomattox", label:"Civil War", result:"Union victory; slavery abolished by the Thirteenth Amendment in 1865", date:"1861–1865", desc:"The Union against the Confederacy formed by eleven seceding Southern states." },
   { from:"Era of Good Feelings", to:"Lafayette's farewell tour", label:"Monroe", date:"1817–1825", desc:"James Monroe's two terms as President." },
 ];
 
 window.TIMELINES.america = {
-  tab: "American Revolution",
-  span: "1765–1836",
-  title: "Founders, feuds and a duel, 1765–1836",
+  tab: "United States",
+  span: "1765–1865",
+  title: "Founders, feuds and a civil war, 1765–1865",
   GROUPS, GROUP_COLOR, P, ROWS, GROUP_DESC, SPANS,
 };
 })();
