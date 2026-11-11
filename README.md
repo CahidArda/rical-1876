@@ -50,7 +50,11 @@ and its id in `TL_ORDER` in `index.html`.
 
 Each person and event can also carry `wiki` (an English Wikipedia article title, shown as a
 link in the tooltip), and optionally `img` (an image URL, e.g. from Wikimedia Commons) with
-`imgCredit`, shown at the top of the tooltip. Images are never hosted here. An event lists its
+`imgCredit`/`imgPage`, shown at the top of the tooltip. Images are never hosted here.
+
+The images that are filled in come from each article's Wikidata image (P18) and are served by
+Wikimedia Commons. Only paintings, engravings, coins, sculpture and documents are used;
+photographs of people are deliberately left out, which is why most of the Ottoman cast has none. An event lists its
 parties and their members; `dies` marks people who die in that event. The layout is
 recomputed on load.
 
