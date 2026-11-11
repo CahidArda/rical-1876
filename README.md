@@ -8,10 +8,10 @@ and who outlived whom. Three timelines, switchable with the tabs at the top:
 
 | Tab | Span | Cast |
 |---|---|---|
-| Ottoman Empire (`#ottoman`) | 1865–1964 | Midhat, Abdülhamid, Enver, Talât, Kemal and the rest of the *ricâl-i devlet* |
 | Roman Republic (`#rome`) | 133–27 BC | the Gracchi, Marius, Sulla, Pompey, Crassus, Caesar, Cicero, Cato, Brutus, Antony, Octavian |
 | American Revolution (`#america`) | 1765–1836 | Washington, Franklin, Adams, Jefferson, Hamilton, Burr, Arnold, Lafayette, George III |
 | French Revolution (`#france`) | 1789–1850 | Lafayette, Danton, Robespierre, Fouché, Talleyrand, Barras, Napoleon, Bernadotte |
+| Ottoman Empire (`#ottoman`) | 1865–1964 | Midhat, Abdülhamid, Enver, Talât, Kemal and the rest of the *ricâl-i devlet* |
 | Bolsheviks (`#bolsheviks`) | 1903–1953 | Lenin, Martov, Trotsky, Zinoviev, Kamenev, Bukharin, Stalin, Molotov, Beria |
 
 Each vertical line is a person and time flows down. When people take part in an event their

@@ -89,7 +89,8 @@ async def main():
         sel = f'html[data-tl="{tl}"]' if tl != ids[0] else f':is(html[data-tl="{tl}"], html:not([data-tl]))'
         css.append(f'{sel} #title .baked[data-tl="{tl}"] {{ display: inline; }}')
         css.append(f'{sel} #legends .baked[data-tl="{tl}"] {{ display: flex; }}')
-        css.append(f'{sel} #tabs a[data-tl="{tl}"] {{ color: var(--bg); background: var(--fg); }}')
+        css.append(f'{sel} #tabs a[data-tl="{tl}"] {{ color: var(--fg); border-top: 2px solid var(--fg); padding-top: 9px; }}')
+        css.append(f'{sel} #tabs a[data-tl="{tl}"]::before {{ color: var(--fg); }}')
         css.append(f'@media (min-width: 760px) {{ {sel} #charts .baked[data-tl="{tl}"][data-v="d"] {{ display: block; }} }}')
         css.append(f'@media (max-width: 759.98px) {{ {sel} #charts .baked[data-tl="{tl}"][data-v="m"] {{ display: block; }} }}')
 
