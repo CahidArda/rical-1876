@@ -63,11 +63,22 @@
     font-size: 13px; line-height: 1.45; box-shadow: 0 6px 24px rgba(0,0,0,.25); display: none; }
   #tip b { font-size: 14px; }
   #tip .m { opacity: .7; font-size: 12px; }
-  #tip .tipimg { display: block; max-width: 100%; max-height: 180px; margin: 0 0 8px; border-radius: 4px; }
-  #tip .credit { font-size: 10.5px; opacity: .6; margin: -4px 0 8px; }
-  #tip .credit a { color: inherit; }
+  #tip.has-img { max-width: calc(100vw - 16px); }
+  #tip .tw { display: flex; gap: 12px; align-items: flex-start; }
+  #tip .tx { width: 240px; flex: 0 1 240px; min-width: 0; }
+  #tip .ph { flex: none; position: relative; border-radius: 4px; overflow: hidden; background: rgba(127,127,127,.18); }
+  #tip .ph::before { content: ""; position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px;
+    border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; opacity: .45;
+    animation: spin .8s linear infinite; }
+  #tip .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top;
+    opacity: 0; transition: opacity .15s; }
+  #tip .ph img.ok { opacity: 1; }
+  #tip .ph:has(img.ok)::before { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   #tip a.wiki { display: inline-block; margin-top: 8px; font-size: 12px; color: inherit; opacity: .75; }
   #tip a.wiki:hover { opacity: 1; }
+  #tip .links { display: flex; gap: 12px; margin-top: 8px; }
+  #tip .links a.wiki { margin-top: 0; }
   #tip ul { margin: 6px 0 0; padding-left: 16px; }
   #tip li { margin: 2px 0; }
   footer { max-width: 1100px; margin: 0 auto; padding: 0 16px 30px; color: var(--muted); font-size: 12px; }
@@ -85,6 +96,7 @@
 <footer>Simplified for readability. Rows are spaced evenly, not to scale; shaded bands mark long jumps in time. Some dates are approximate.</footer>
 <div id="tip"></div>
 
+<script src="timelines/img-ratios.js"></script>
 <script src="timelines/ottoman.js"></script>
 <script src="timelines/rome.js"></script>
 <script src="timelines/france.js"></script>
@@ -356,9 +368,11 @@ function show(html, personId, e) {
     svg.classList.add("focus");
     svg.querySelectorAll(`.person[data-id="${personId}"]`).forEach(n => n.classList.add("on"));
   }
+  // measure at the origin, so the wrap width isn't squeezed by the previous position
+  tip.style.left = "0px"; tip.style.top = "0px";
   tip.innerHTML = html; tip.style.display = "block";
+  tip.classList.toggle("has-img", html.includes('class="tw"'));
   tip.style.pointerEvents = pinned ? "auto" : "none";
-  tip.querySelectorAll("img").forEach(im => im.addEventListener("load", () => moveTip(e), { once: true }));
   moveTip(e);
 }
 function bind(node, html, personId) {
@@ -371,9 +385,16 @@ function bind(node, html, personId) {
 document.addEventListener("click", () => { if (pinned) { pinned = false; clearAll(); } });
 
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
-const imgHtml = o => o.img ? `<img class="tipimg" src="${esc(o.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">${o.imgPage ? `<div class="credit"><a href="${esc(o.imgPage)}" target="_blank" rel="noopener">${esc(o.imgCredit || "Image: Wikimedia Commons")}</a></div>` : o.imgCredit ? `<div class="credit">${esc(o.imgCredit)}</div>` : ""}` : "";
+const IMG_H = innerWidth < 480 ? 112 : 168;
+const imgBox = o => {
+  const w = Math.round(IMG_H * Math.min(Math.max(o.imgR || 0.8, 0.62), 1.25));
+  return `<div class="ph" style="width:${w}px;height:${IMG_H}px"><img src="${esc(o.img)}" alt="" referrerpolicy="no-referrer" onload="this.classList.add('ok')"></div>`;
+};
+const imgLink = o => o.imgPage ? `<a class="wiki" href="${esc(o.imgPage)}" target="_blank" rel="noopener">Image ↗</a>` : "";
+const withImg = (o, body) => o.img ? `<div class="tw">${imgBox(o)}<div class="tx">${body}</div></div>` : body;
+const links = o => (o.wiki || o.imgPage) ? `<div class="links">${wikiHtml(o)}${imgLink(o)}</div>` : "";
 const wikiHtml = o => o.wiki ? `<a class="wiki" href="https://en.wikipedia.org/wiki/${encodeURIComponent(o.wiki.replace(/ /g, "_"))}" target="_blank" rel="noopener">Wikipedia ↗</a>` : "";
-const personTip = p => `${imgHtml(p)}<b style="color:${p.c}">${p.name}</b><div class="m">${GROUPS[p.g]}</div><div style="margin-top:4px">${p.bio}</div><div style="margin-top:6px">✕ ${p.death}</div>${wikiHtml(p)}`;
+const personTip = p => withImg(p, `<b style="color:${p.c}">${p.name}</b><div class="m">${GROUPS[p.g]}</div><div style="margin-top:4px">${p.bio}</div><div style="margin-top:6px">✕ ${p.death}</div>${links(p)}`);
 
 for (const p of P) {
   const g = el("g", { class: "person", "data-id": p.id }, gLines);
@@ -394,7 +415,7 @@ for (const r of ROWS.filter(r => r.t === "e")) {
   const top = r.y - BH / 2;
   const box = el("rect", { x: r.box.x0, y: top, width: r.box.w, height: BH, rx: 8, class: "ebox" }, gBoxes);
   const partyHtml = r.parties.map(pt => `<li><b style="font-size:12px">${pt.name}:</b> ${pt.m.map(id => `<span style="color:${P[idx[id]].c}">${P[idx[id]].name}</span>`).join(", ")}</li>`).join("");
-  const html = `${imgHtml(r)}<b>${r.title}</b><div class="m">${r.date}</div><div style="margin-top:4px">${r.desc}</div><ul>${partyHtml}</ul>${wikiHtml(r)}`;
+  const html = withImg(r, `<b>${r.title}</b><div class="m">${r.date}</div><div style="margin-top:4px">${r.desc}</div><ul>${partyHtml}</ul>${links(r)}`);
   bind(box, () => html, null);
   for (const pt of r.parties) {
     el("rect", { x: pt.x0, y: top + 4, width: pt.w, height: BH - 8, rx: 5, class: "pbox" }, gBoxes).style.pointerEvents = "none";

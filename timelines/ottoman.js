@@ -270,11 +270,12 @@ for (const r of ROWS) if (r.t === "e" && WIKI_E[r.title]) r.wiki = WIKI_E[r.titl
 
 // Images from Wikidata (P18), served by Wikimedia Commons; nothing is hosted here.
 // Only paintings, engravings, illustrations and documents: photographs of people are left out.
-const IMG_FILES = {"Hüseyin Avni Pasha": "Pasha Avni Hussein.jpg", "Murad V": "Portrait of Murad V.jpg", "Abdul Hamid II": "Sultan Abdul Hamid II in 1899.jpg", "Constitution of the Ottoman Empire": "Kanun-i Esasi.jpg", "Çırağan incident": "The attempted coup in front of the Cheragan Palace in Constantinople on 20 May, 1878.jpg", "Abolition of the Caliphate": "Abolition of the Caliphate, The Last Caliph, Le Petit Journal illustré, 16 March 1924.jpg"};
-const commons = f => ({ img: "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(f) + "?width=360",
+const IMG_FILES = {"Hüseyin Avni Pasha": "Pasha Avni Hussein.jpg", "Murad V": "Portrait of Murad V.jpg", "Midhat Pasha": "Midhatpasha.jpg", "Mehmed V": "Le Petir Journal, Proclamation of Mehmed V.jpg", "Abdul Hamid II": "Sultan Abdul Hamid II in 1899.jpg", "Constitution of the Ottoman Empire": "Kanun-i Esasi.jpg", "Çırağan incident": "The attempted coup in front of the Cheragan Palace in Constantinople on 20 May, 1878.jpg", "Abolition of the Caliphate": "Abolition of the Caliphate, The Last Caliph, Le Petit Journal illustré, 16 March 1924.jpg"};
+const commons = f => ({ imgR: (window.IMG_RATIO || {})[f] || 0.8, img: "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(f) + "?width=360",
   imgPage: "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(f.replace(/ /g, "_")) });
 for (const p of P) if (IMG_FILES[p.wiki]) Object.assign(p, commons(IMG_FILES[p.wiki]));
 for (const r of ROWS) if (r.t === "e" && IMG_FILES[r.wiki]) Object.assign(r, commons(IMG_FILES[r.wiki]));
+for (const r of ROWS) if (r.t === "e" && r.title === "Constitution restored") Object.assign(r, commons("Greek lithograph celebrating the Ottoman Constitution.png"));
 
 window.TIMELINES.ottoman = {
   tab: "Ottoman Empire",

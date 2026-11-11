@@ -50,7 +50,9 @@ and its id in `TL_ORDER` in `index.html`.
 
 Each person and event can also carry `wiki` (an English Wikipedia article title, shown as a
 link in the tooltip), and optionally `img` (an image URL, e.g. from Wikimedia Commons) with
-`imgCredit`/`imgPage`, shown at the top of the tooltip. Images are never hosted here.
+`imgPage` (its source page) and `imgR` (width / height). The image sits left of the text at a
+fixed height; `imgR` lets the tooltip reserve its exact space with a spinner before the image
+arrives. Ratios for the Commons files live in `timelines/img-ratios.js`. Images are never hosted here.
 
 The images that are filled in come from each article's Wikidata image (P18) and are served by
 Wikimedia Commons. Only paintings, engravings, coins, sculpture and documents are used;
