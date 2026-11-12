@@ -55,6 +55,19 @@ StoryFlow (Liu et al., 2013):
    A final top-down pass keeps lines that are not part of an event perfectly straight, so
    they only move when a box needs the room.
 
+## Link preview
+
+`og.png` is the 1200×630 image link previews show (the `og:` and `twitter:` tags in
+`index.html`). `og.py` draws it from the baked French Revolution chart, tilted behind the
+title and centred on the king's trial. It is not part of the bake or the GitHub Action, so
+the preview stays put as the timelines change. To redraw it, run it by hand after a bake:
+
+```sh
+python3 og.py
+```
+
+The timeline and the event it centres on are set at the top of `og.py`.
+
 ## Run locally
 
 ```sh
