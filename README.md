@@ -1,5 +1,7 @@
 # Rical 1876
 
+**Live:** [rical-1876.cahidarda.com](https://rical-1876.cahidarda.com) · **Write-up:** [cahidarda.com/articles/rical-1876](https://cahidarda.com/articles/rical-1876)
+
 > Made by Cahid Arda Öz with Claude. The app was prepared with AI, so details may be wrong.
 > The historical content was written by the agent; it isn't my claim or opinion.
 
