@@ -288,7 +288,9 @@ for (const sp of SPANS.filter(sp => sp.a >= 0 && sp.b >= 0).sort((x, y) => x.a -
 }
 const LANE = 26, NL = spanLanes.length;
 const LEFT = MOBILE ? 120 : 196, COL = 50, TOP = 40, RIGHT = (MOBILE ? 20 : 24) + (NL ? 8 + LANE * (NL - 1) : 0);
-const EH = 104, DH = 40, GH = 56, MH = 72, BH = 56, MS = 20, PGAP = 6, PAD = 6;
+// row and box heights; window.RICAL_SIZES can override them (the static images use a tighter set)
+const { EH = 104, DH = 40, GH = 56, MH = 72, BH = 56 } = window.RICAL_SIZES || {};
+const MS = 20, PGAP = 6, PAD = 6;
 const idx = Object.fromEntries(P.map((p, i) => [p.id, i]));
 const avg = a => a.reduce((s, v) => s + v, 0) / a.length;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
