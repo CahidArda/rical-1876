@@ -41,7 +41,7 @@ COMPOSE = r"""
       #og .brand { align-self:flex-start; font-weight:700; font-size:24px; letter-spacing:-.01em; padding-bottom:6px;
                    border-bottom:3px solid #dc2626; }
       #og h1 { margin:auto 0 0; font-size:72px; line-height:1; letter-spacing:-.04em; font-weight:700; }
-      #og p { margin:22px 0 0; font-size:23px; line-height:1.4; color:var(--muted); max-width:520px; }
+      #og p { margin:22px 0 0; font-size:23px; line-height:1.4; color:var(--muted); max-width:580px; }
       #og .eras { margin-top:auto; font-size:16px; line-height:1.7; color:var(--muted); letter-spacing:.01em; }
       #og .eras span { white-space:nowrap; }
       #og .eras i { font-style:normal; opacity:.5; padding:0 7px; }
@@ -51,7 +51,7 @@ COMPOSE = r"""
     <div class="fg">
       <div class="brand">Rical</div>
       <h1>Who stood<br>next to whom</h1>
-      <p>Chaotic political eras drawn as lines that meet whenever people's paths cross.</p>
+      <p>Five political eras drawn as lines that meet when people's paths cross. Pick an era and follow anyone from rise to fall.</p>
       <div class="eras">${eras.map(e => `<span>${e}</span>`).join('<i>·</i>')}</div>
     </div>`;
   document.body.appendChild(card);
