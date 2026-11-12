@@ -552,12 +552,16 @@ for (const r of ROWS) {
 const tip = document.getElementById("tip");
 let pinned = false;
 function moveTip(e) {
-  const pad = 14, r = tip.getBoundingClientRect();
+  // pinch-zoom on phones: keep the card inside the visible area and at its normal on-screen size
+  const vv = window.visualViewport, k = vv && vv.scale > 1.01 ? 1 / vv.scale : 1;
+  const vx = vv ? vv.offsetLeft : 0, vy = vv ? vv.offsetTop : 0, vw = vv ? vv.width : innerWidth, vh = vv ? vv.height : innerHeight;
+  tip.style.transformOrigin = "0 0"; tip.style.transform = k < 1 ? `scale(${k})` : "";
+  const pad = 14 * k, m = 8 * k, r = tip.getBoundingClientRect();
   let x = e.clientX + pad, y = e.clientY + pad;
-  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - pad;
-  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - pad;
-  tip.style.left = clamp(x, 8, Math.max(8, innerWidth - r.width - 8)) + "px";
-  tip.style.top = clamp(y, 8, Math.max(8, innerHeight - r.height - 8)) + "px";
+  if (x + r.width > vx + vw - m) x = e.clientX - r.width - pad;
+  if (y + r.height > vy + vh - m) y = e.clientY - r.height - pad;
+  tip.style.left = clamp(x, vx + m, Math.max(vx + m, vx + vw - r.width - m)) + "px";
+  tip.style.top = clamp(y, vy + m, Math.max(vy + m, vy + vh - r.height - m)) + "px";
 }
 function clearAll() {
   svg.classList.remove("focus");
@@ -585,6 +589,9 @@ function bind(node, html, personId) {
   node.addEventListener("click", e => { e.stopPropagation(); pinned = true; show(html(), personId, e); });
 }
 document.addEventListener("click", () => { if (pinned) { pinned = false; clearAll(); } });
+// a card pinned at one zoom level is the wrong size at another: close it when the zoom changes
+if (window.visualViewport) { let z = visualViewport.scale; visualViewport.addEventListener("resize", () => {
+  if (Math.abs(visualViewport.scale - z) > 0.01) { z = visualViewport.scale; if (pinned) { pinned = false; clearAll(); } } }); }
 
 const tc = c => `color:color-mix(in srgb, ${c} 72%, var(--tip-fg))`;  // person colour, readable on the card
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
